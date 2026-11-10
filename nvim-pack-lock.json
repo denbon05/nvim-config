@@ -1,0 +1,12 @@
+{
+  "plugins": {
+    "fzf-lua": {
+      "rev": "22f0bbd3140a8a3b34fec75e5a640513ca6d4ce3",
+      "src": "https://github.com/ibhagwan/fzf-lua"
+    },
+    "nvim-lspconfig": {
+      "rev": "443d92c6bea761ab54cdde46fb197a2b4d614bdd",
+      "src": "https://github.com/neovim/nvim-lspconfig"
+    }
+  }
+}

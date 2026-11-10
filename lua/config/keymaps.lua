@@ -10,8 +10,8 @@ map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 -- Tap Space, then w, to save the file.
 map("n", "<leader>w", "<cmd>write<CR>", { desc = "Save" })
 
--- Tap Space, then e, to see the files in the current file's folder.
-map("n", "<leader>e", "<cmd>Explore<CR>", { desc = "File explorer" })
+-- Tap Space, then e, to show or hide the file list on the left.
+map("n", "<leader>e", "<cmd>20Lexplore<CR>", { desc = "File explorer" })
 
 -- Hold Ctrl and press h to move to the split on the left.
 map("n", "<C-h>", "<C-w>h")

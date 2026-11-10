@@ -13,3 +13,10 @@ require("config.options")
 
 -- Run lua/config/keymaps.lua, which holds your shortcuts.
 require("config.keymaps")
+
+-- Run lua/config/plugins.lua, which loads the plugins.
+require("config.plugins")
+
+-- Run lua/config/lsp.lua, which starts the language servers.
+require("config.lsp")
+
