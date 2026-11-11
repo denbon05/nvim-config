@@ -15,3 +15,8 @@ vim.keymap.set("n", "<leader>/", fzf.live_grep, { desc = "Search text" })
 
 -- Tap Space, then b, to pick one of the open files (buffers) from a list.
 vim.keymap.set("n", "<leader>b", fzf.buffers, { desc = "Open buffers" })
+
+-- Tap Space, then g, to list the files changed since the last commit ("git").
+-- The right side shows what changed in the selected file. Shift-Down and
+-- Shift-Up scroll that side, and Enter opens the file.
+vim.keymap.set("n", "<leader>g", fzf.git_status, { desc = "Git changes" })

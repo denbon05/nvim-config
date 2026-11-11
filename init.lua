@@ -20,3 +20,9 @@ require("config.plugins")
 -- Run lua/config/lsp.lua, which starts the language servers.
 require("config.lsp")
 
+-- Run lua/config/colors.lua, which sets the color scheme.
+require("config.colors")
+
+-- Run lua/config/treesitter.lua, which turns on detailed syntax highlighting.
+require("config.treesitter")
+
