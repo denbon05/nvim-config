@@ -22,8 +22,30 @@ vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
-    -- gd means "go to definition": jump to where the name under the cursor is defined.
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "Go to definition" })
+    -- gd means "go to definition": jump to where the name under the cursor is
+    -- defined, and scroll so that line is in the middle of the window.
+    vim.keymap.set("n", "gd", function()
+      -- on_list receives the places the servers found, instead of jumping itself.
+      vim.lsp.buf.definition({
+        on_list = function(found)
+          local place = found.items[1]
+
+          -- Remember where I am, so Ctrl-o comes back here.
+          vim.cmd("normal! m'")
+
+          -- Show the file that holds the definition in this window.
+          local buf = vim.fn.bufadd(place.filename)
+          vim.bo[buf].buflisted = true
+          vim.api.nvim_win_set_buf(0, buf)
+
+          -- Put the cursor on the name. Columns count from 0 here, hence "- 1".
+          vim.api.nvim_win_set_cursor(0, { place.lnum, place.col - 1 })
+
+          -- zz scrolls the cursor line to the middle of the window.
+          vim.cmd("normal! zz")
+        end,
+      })
+    end, { buffer = ev.buf, desc = "Go to definition" })
 
     -- If this server can suggest completions, open the menu by itself while typing.
     if client:supports_method("textDocument/completion") then

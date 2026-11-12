@@ -11,6 +11,21 @@ map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 -- stdpath("config") is the folder of this config, ~/.config/nvim.
 map("n", "<leader>?", function()
   vim.cmd.vsplit(vim.fn.stdpath("config") .. "/CHEATSHEET.md")
+
+  -- Hide the line numbers and the marker column in this window only.
+  vim.opt_local.number = false
+  vim.opt_local.relativenumber = false
+  vim.opt_local.signcolumn = "no"
+
+  -- Hide the markdown symbols, such as the backticks around a key.
+  vim.opt_local.conceallevel = 2
+
+  -- Continue a long line on the next row, breaking it between words.
+  vim.opt_local.wrap = true
+  vim.opt_local.linebreak = true
+
+  -- In the cheatsheet only, q closes its window.
+  map("n", "q", "<cmd>close<CR>", { buffer = true, desc = "Close the cheatsheet" })
 end, { desc = "Open the cheatsheet" })
 
 -- Tap Space, then w, to save the file.

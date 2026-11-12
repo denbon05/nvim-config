@@ -26,3 +26,5 @@ require("config.colors")
 -- Run lua/config/treesitter.lua, which turns on detailed syntax highlighting.
 require("config.treesitter")
 
+-- Run lua/config/diff.lua, which shows git changes inside the file.
+require("config.diff")
