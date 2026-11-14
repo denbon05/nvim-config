@@ -42,17 +42,22 @@ Ctrl-x        Throw away the file's changes (deletes a new file). It asks
 The line numbers of added, changed and deleted lines are colored. A staged change counts as reviewed and is no longer marked.
 
 ```
-Space o *  Show or hide the changes inside every open file: deleted lines
-           appear above, added lines get a background
-]h / [h    Jump to the next / previous change in the file
-gh gh      Stage the change under the cursor
+Space o *          Show or hide the changes inside every open file: deleted
+                   lines appear above, added lines get a background
+Ctrl-n / Ctrl-p *  Jump to the next / previous change in the file and scroll
+                   so the whole change is visible
+gh gh              Stage the change under the cursor
 ```
 
 ## Move through code
 
+The lines pinned at the top of the window are the class and function the cursor is in, shown when their first line has scrolled away. The bottom right corner shows the cursor's line and column, then where the window is in the file: `Top`, `Bot`, `All` (the whole file fits) or a percentage.
+
 ```
 gd                  Go to the definition of the name, shown mid-screen
 Ctrl-o / Ctrl-i     Jump back / forward through the places I jumped from
+[m / ]m             Jump up to the def or class line the cursor is in / down
+                    to the next one
 grr                 List every place the name is used
 Ctrl-j, then Enter  Go down into that list and jump to the selected place
 ]q / [q             Jump to the next / previous place of the list without
@@ -66,6 +71,10 @@ K K                 Enter the description window to copy from it. q closes it
 *                   Find the word under the cursor
 Esc *               Clear the search highlights
 } / {               Jump to the next / previous empty line
+Ctrl-e / Ctrl-y     Scroll the text one line down / up. The cursor stays on
+                    its line. 5 Ctrl-e scrolls five lines
+Ctrl-d / Ctrl-u     Scroll half a screen down / up
+Ctrl-f / Ctrl-b     Scroll a whole screen down / up
 gg / G              Start / end of the file
 5j / 5k             Five lines down / up. The left margin shows the number
 f + character       Jump to that character on this line

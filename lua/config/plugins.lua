@@ -47,3 +47,11 @@ vim.keymap.set("n", "<leader>g", function()
     },
   })
 end, { desc = "Git changes" })
+
+-- Smooth scrolling. Without it a scroll redraws the screen in one step and
+-- it is easy to lose your place. neoscroll moves the text gradually instead.
+vim.pack.add({ "https://github.com/karb94/neoscroll.nvim" })
+
+-- Load neoscroll with its default settings. It animates Ctrl-d, Ctrl-u,
+-- Ctrl-f, Ctrl-b, Ctrl-e, Ctrl-y, zt, zz and zb.
+require("neoscroll").setup({})

@@ -40,3 +40,71 @@ vim.api.nvim_create_autocmd("User", {
     sync_overlay(ev.buf)
   end,
 })
+
+-- Scroll so that the change under the cursor is fully on screen. A "hunk" is
+-- one change: a group of neighbouring added, changed or deleted lines.
+local function show_whole_change()
+  local data = diff.get_buf_data(0)
+  if not data then
+    return
+  end
+
+  -- cursor is { line, column }. It is restored below, after the scrolling.
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  for _, hunk in ipairs(data.hunks) do
+    -- The first and last line of this change. A change that only deletes
+    -- lines has no lines of its own (buf_count is 0), so it counts as one.
+    local first = math.max(hunk.buf_start, 1)
+    local last = first + math.max(hunk.buf_count, 1) - 1
+
+    if first <= cursor[1] and cursor[1] <= last then
+      -- The rows left for the change once scrolloff keeps its lines visible
+      -- above and below the cursor.
+      local free_rows = vim.api.nvim_win_get_height(0) - 2 * vim.o.scrolloff
+
+      if last - first + 1 <= free_rows then
+        -- The change fits: put its middle line in the middle of the window
+        -- (zz), then move the cursor back to where it was.
+        vim.api.nvim_win_set_cursor(0, { math.floor((first + last) / 2), 0 })
+        vim.cmd("normal! zz")
+        vim.api.nvim_win_set_cursor(0, cursor)
+      else
+        -- The change is taller than the window: show as much of it as
+        -- possible by scrolling its first line to the top (zt).
+        vim.cmd("normal! zt")
+      end
+      return
+    end
+  end
+end
+
+-- Hold Ctrl and press n to jump to the next change, or p for the previous
+-- one, and scroll so the whole change is visible. Without these shortcuts
+-- Ctrl-n and Ctrl-p only repeat j and k. mini.diff's own ]h and [h still
+-- work, but they don't scroll.
+vim.keymap.set("n", "<C-n>", function()
+  diff.goto_hunk("next")
+  show_whole_change()
+end, { desc = "Next change, fully visible" })
+
+vim.keymap.set("n", "<C-p>", function()
+  diff.goto_hunk("prev")
+  show_whole_change()
+end, { desc = "Previous change, fully visible" })
+
+-- Overlay colors for a changed line: the old text red, the new text green,
+-- the same as deleted and added lines. By default the color scheme paints
+-- both of them red, so old and new text are hard to tell apart.
+local function set_overlay_colors()
+  -- The old version of a changed line, shown above the new one.
+  vim.api.nvim_set_hl(0, "MiniDiffOverChange", { link = "DiffDelete" })
+  vim.api.nvim_set_hl(0, "MiniDiffOverContext", { link = "DiffDelete" })
+  -- The new version of a changed line, which is the real line of the file.
+  vim.api.nvim_set_hl(0, "MiniDiffOverChangeBuf", { link = "DiffAdd" })
+  vim.api.nvim_set_hl(0, "MiniDiffOverContextBuf", { link = "DiffAdd" })
+end
+
+set_overlay_colors()
+
+-- Switching the color scheme resets every color, so set these again after it.
+vim.api.nvim_create_autocmd("ColorScheme", { callback = set_overlay_colors })

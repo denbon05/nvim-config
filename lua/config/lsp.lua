@@ -10,9 +10,12 @@ vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
 -- and show extra details in a small popup next to it.
 vim.o.completeopt = "menuone,noselect,popup"
 
--- Start these servers for matching files: Pyright and Ruff for Python,
--- ts_ls for TypeScript. Each server must be installed with Homebrew.
-vim.lsp.enable({ "pyright", "ruff", "ts_ls" })
+-- Start these servers for matching files: Pyright and Ruff for Python, tsc
+-- for TypeScript and JavaScript. Each server must be installed with Homebrew.
+-- tsc is the language server built into TypeScript 7. The older ts_ls server
+-- needs TypeScript 6 or older and fails with "Could not find a valid
+-- TypeScript installation" next to version 7.
+vim.lsp.enable({ "pyright", "ruff", "tsc" })
 
 -- Show error messages at the end of the line where they happen.
 vim.diagnostic.config({ virtual_text = true })

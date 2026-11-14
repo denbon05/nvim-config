@@ -41,3 +41,16 @@ vim.api.nvim_create_autocmd("FileType", {
     pcall(vim.treesitter.start)
   end,
 })
+
+-- Sticky header: when the start of the function or class around the cursor
+-- has scrolled off the screen, keep its first line pinned at the top of the
+-- window, like "sticky scroll" in VS Code.
+vim.pack.add({ "https://github.com/nvim-treesitter/nvim-treesitter-context" })
+
+require("treesitter-context").setup({
+  -- Pin at most 3 lines, for example the class, the function and an "if".
+  max_lines = 3,
+  -- When more than 3 would be pinned, drop the innermost ones, so the class
+  -- and the function names stay.
+  trim_scope = "inner",
+})

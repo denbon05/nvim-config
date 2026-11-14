@@ -9,10 +9,11 @@ brew "fzf"
 brew "ripgrep"
 brew "fd"
 
-# Language servers: Pyright and Ruff for Python, the last one for TypeScript.
+# Language servers: Pyright and Ruff for Python, the last one for TypeScript
+# and JavaScript (TypeScript 7 has the language server built in).
 brew "pyright"
 brew "ruff"
-brew "typescript-language-server"
+brew "typescript"
 
 # Builds the tree-sitter parsers for syntax highlighting.
 brew "tree-sitter-cli"
