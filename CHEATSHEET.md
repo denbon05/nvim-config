@@ -22,7 +22,7 @@ Space e *        Show or hide the file list on the left
 Inside a search window: type to narrow the list, `Ctrl-j` / `Ctrl-k` or the arrows move the selection, `Enter` opens, `Esc` closes. The right side is a preview:
 
 ```
-Shift-Down / Shift-Up                Scroll the preview by a page
+Shift-Down / Shift-Up                Scroll the preview by half a page
 Option-Shift-Down / Option-Shift-Up  Scroll the preview by a line
 F4                                   Hide or show the preview
 ```
@@ -33,6 +33,10 @@ In the `Space` `g` list only:
 Left / Right  Stage / unstage the selected file
 Ctrl-x        Throw away the file's changes (deletes a new file). It asks
               first
+Ctrl-r        Show only the files that still have unstaged changes, and
+              only those changes ("to review")
+Ctrl-s        Show only the staged files, and only their staged changes
+Ctrl-a        Show all the changes again
 ```
 
 `:FzfLua` lists every search it has. `:FzfLua keymaps` searches all shortcuts.
@@ -66,9 +70,10 @@ Ctrl-j, then Enter  Go down into that list and jump to the selected place
 K                   Show the description of the name. Moving the cursor closes
                     it
 K K                 Enter the description window to copy from it. q closes it
-/text + Enter       Jump to text in this file. n next match, N previous
+/text + Enter       Jump to text in this file, shown mid-screen
 ?text + Enter       The same, searching upwards
-*                   Find the word under the cursor
+n / N               Jump to the next / previous match, shown mid-screen
+*                   Find the word under the cursor, shown mid-screen
 Esc *               Clear the search highlights
 } / {               Jump to the next / previous empty line
 Ctrl-e / Ctrl-y     Scroll the text one line down / up. The cursor stays on

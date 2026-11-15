@@ -7,6 +7,60 @@ local map = vim.keymap.set
 -- Esc also clears the yellow highlights left behind by a search.
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
+-- After a search, n and N jump to the next and previous match, and * searches
+-- for the word under the cursor. Here each of them also runs zz, which
+-- scrolls the line with the match to the middle of the window.
+map("n", "n", "nzz", { desc = "Next match, mid-screen" })
+map("n", "N", "Nzz", { desc = "Previous match, mid-screen" })
+map("n", "*", "*zz", { desc = "Find the word under the cursor, mid-screen" })
+
+-- The first jump of a search, /text or ?text and then Enter, is centered too.
+-- "c" means the shortcut works while typing on the command line at the
+-- bottom. getcmdtype() tells what is being typed there: "/" or "?" for a
+-- search, ":" for a command. Only a search gets zz added after its Enter.
+-- expr = true means the function returns the keys to press.
+map("c", "<CR>", function()
+  local kind = vim.fn.getcmdtype()
+  if kind == "/" or kind == "?" then
+    return "<CR>zz"
+  end
+  return "<CR>"
+end, { expr = true, desc = "Run the search and show the match mid-screen" })
+
+-- A namespace is a label for the colors added below, so that they can be
+-- removed again without touching any other highlighting.
+local cheatsheet_keys = vim.api.nvim_create_namespace("cheatsheet_keys")
+
+-- Color the keys in the lists of the cheatsheet, like the keys in its
+-- sentences. buf is the number of the buffer that holds the cheatsheet.
+local function color_cheatsheet_keys(buf)
+  -- Remove the colors of the previous call, in case the file has changed.
+  vim.api.nvim_buf_clear_namespace(buf, cheatsheet_keys, 0, -1)
+
+  -- A list sits between two lines that start with three backticks.
+  local in_list = false
+  for row, line in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
+    if line:match("^```") then
+      in_list = not in_list
+    elseif in_list then
+      -- The keys are the text from the start of the line up to the first gap
+      -- of two spaces. A line that continues a description starts with
+      -- spaces, so it has no keys.
+      local keys = line:match("^(%S.-)%s%s")
+      if keys then
+        -- Leave the star that marks my own shortcuts uncolored.
+        keys = keys:gsub(" %*$", "")
+        -- Paint the keys with the color of `code` in a sentence. Rows are
+        -- counted from 0 here, which is why "row - 1" appears.
+        vim.api.nvim_buf_set_extmark(buf, cheatsheet_keys, row - 1, 0, {
+          end_col = #keys,
+          hl_group = "@markup.raw.markdown_inline",
+        })
+      end
+    end
+  end
+end
+
 -- Tap Space, then ?, to open the cheatsheet with every shortcut, on the right.
 -- stdpath("config") is the folder of this config, ~/.config/nvim.
 map("n", "<leader>?", function()
@@ -23,6 +77,9 @@ map("n", "<leader>?", function()
   -- Continue a long line on the next row, breaking it between words.
   vim.opt_local.wrap = true
   vim.opt_local.linebreak = true
+
+  -- Color the keys in the lists. 0 means the current buffer.
+  color_cheatsheet_keys(0)
 
   -- In the cheatsheet only, q closes its window.
   map("n", "q", "<cmd>close<CR>", { buffer = true, desc = "Close the cheatsheet" })

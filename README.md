@@ -17,6 +17,17 @@ On the first start, Neovim asks before downloading the plugins: press `y`. The s
 
 For a Python project that uses uv, start Neovim with `uv run nvim .` so Pyright can find the packages in `.venv`.
 
+## Update
+
+On a machine that already has the config:
+
+```sh
+git -C ~/.config/nvim pull
+brew bundle --file ~/.config/nvim/Brewfile
+```
+
+Then start Neovim, or run `:restart` if it is open. A plugin that was added is downloaded on that start: press `y` when Neovim asks. If the pull changed the version of a plugin that is already installed, run `:lua vim.pack.update(nil, { target = "lockfile" })` and confirm with `:w`.
+
 ## Layout
 
 ```
@@ -31,7 +42,8 @@ For a Python project that uses uv, start Neovim with `uv run nvim .` so Pyright 
     ├── plugins.lua        fzf-lua: find files and search text
     ├── lsp.lua            Language servers: errors, go to definition, completion
     ├── colors.lua         Color scheme: VS Code light and dark, follows the terminal
-    └── treesitter.lua     Detailed syntax highlighting with tree-sitter
+    ├── treesitter.lua     Detailed syntax highlighting with tree-sitter
+    └── diff.lua           Git changes inside the file, jumps between them
 ```
 
 ## Shortcuts

@@ -3,9 +3,23 @@
 -- On the first start it asks before downloading anything: press y.
 vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
 
--- Load fzf-lua and start it with its default settings.
+-- Load fzf-lua and start it with its default settings, except for the keys
+-- below.
 local fzf = require("fzf-lua")
-fzf.setup({})
+fzf.setup({
+  keymap = {
+    fzf = {
+      -- true keeps every default key of fzf-lua that is not listed here.
+      true,
+      -- Shift-Down and Shift-Up scroll the preview by half a page, like
+      -- Ctrl-d and Ctrl-u in a file. The default is a whole page, after
+      -- which it is easy to lose your place. The preview is drawn by fzf,
+      -- not by Neovim, so it can't be animated the way neoscroll does it.
+      ["shift-down"] = "preview-half-page-down",
+      ["shift-up"] = "preview-half-page-up",
+    },
+  },
+})
 
 -- Tap Space, then f, to find a file by typing part of its name (like Cmd+P).
 vim.keymap.set("n", "<leader>f", fzf.files, { desc = "Find files" })
@@ -28,11 +42,50 @@ vim.keymap.set("n", "<leader>/", fzf.live_grep, { desc = "Search text" })
 -- Tap Space, then b, to pick one of the open files (buffers) from a list.
 vim.keymap.set("n", "<leader>b", fzf.buffers, { desc = "Open buffers" })
 
--- Tap Space, then g, to list the files changed since the last commit ("git").
--- The list is on the left and the diff of the selected file is on the right.
--- Shift-Down and Shift-Up scroll the diff, and Enter opens the file.
-vim.keymap.set("n", "<leader>g", function()
+-- The git command that lists the changed files, one per line. Each line
+-- starts with two letters: the first is the staged state of the file and the
+-- second is its unstaged state. A space means "no change of that kind".
+local git_status_cmd = "git -c color.status=false --no-optional-locks status --porcelain=v1 -u"
+
+-- The three views of the list of changed files. For each view:
+--   prompt   the text in front of the search field, to tell the views apart
+--   filter   added to git_status_cmd to keep only some of its lines
+--   diff     the git command whose output is shown on the right
+local git_views = {
+  -- Every changed file, with all its changes since the last commit.
+  all = { prompt = "All changes> ", filter = "", diff = "git diff --color HEAD" },
+  -- Only the files with unstaged changes, and only those changes. grep -v
+  -- drops the lines of fully staged files: a letter, then a space.
+  unstaged = {
+    prompt = "To review> ",
+    filter = " | grep -v '^[MADRC] '",
+    diff = "git diff --color",
+  },
+  -- Only the files with staged changes, and only those changes. grep keeps
+  -- the lines whose first letter says "staged".
+  staged = {
+    prompt = "Staged> ",
+    filter = " | grep '^[MADRC]'",
+    diff = "git diff --color --cached",
+  },
+}
+
+-- Open the list of changed files in one of the three views.
+local function show_git_changes(view_name)
+  local view = git_views[view_name]
+
+  -- The settings fzf-lua uses to show a diff on the right. They are copied,
+  -- and the copy gets this view's diff command.
+  local previewer = vim.deepcopy(require("fzf-lua.config").globals.previewers.git_diff)
+  previewer.cmd_modified = view.diff
+  -- A deleted file is no longer on disk, so git needs "--" in front of its
+  -- name to know that it is a file name.
+  previewer.cmd_deleted = view.diff .. " --"
+
   fzf.git_status({
+    prompt = view.prompt,
+    cmd = git_status_cmd .. view.filter,
+    previewer = previewer,
     winopts = {
       -- Use the whole screen.
       fullscreen = true,
@@ -45,7 +98,27 @@ vim.keymap.set("n", "<leader>g", function()
         wrap = true,
       },
     },
+    actions = {
+      -- Inside the list, hold Ctrl and press r, s or a to switch the view:
+      -- to review (unstaged), staged, all.
+      ["ctrl-r"] = function()
+        show_git_changes("unstaged")
+      end,
+      ["ctrl-s"] = function()
+        show_git_changes("staged")
+      end,
+      ["ctrl-a"] = function()
+        show_git_changes("all")
+      end,
+    },
   })
+end
+
+-- Tap Space, then g, to list the files changed since the last commit ("git").
+-- The list is on the left and the diff of the selected file is on the right.
+-- Shift-Down and Shift-Up scroll the diff, and Enter opens the file.
+vim.keymap.set("n", "<leader>g", function()
+  show_git_changes("all")
 end, { desc = "Git changes" })
 
 -- Smooth scrolling. Without it a scroll redraws the screen in one step and
