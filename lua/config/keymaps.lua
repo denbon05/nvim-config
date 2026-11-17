@@ -14,6 +14,15 @@ map("n", "n", "nzz", { desc = "Next match, mid-screen" })
 map("n", "N", "Nzz", { desc = "Previous match, mid-screen" })
 map("n", "*", "*zz", { desc = "Find the word under the cursor, mid-screen" })
 
+-- Ctrl-o and Ctrl-i jump back and forward through the places you jumped
+-- from, such as the line before a gd. Here they also run zz, so the place
+-- you land on is in the middle of the window, like after gd.
+map("n", "<C-o>", "<C-o>zz", { desc = "Jump back, mid-screen" })
+map("n", "<C-i>", "<C-i>zz", { desc = "Jump forward, mid-screen" })
+-- Most terminals send the same key for Tab and Ctrl-i, and Tab in Normal
+-- mode jumps forward too. Map it the same way, so both keys behave alike.
+map("n", "<Tab>", "<Tab>zz", { desc = "Jump forward, mid-screen" })
+
 -- The first jump of a search, /text or ?text and then Enter, is centered too.
 -- "c" means the shortcut works while typing on the command line at the
 -- bottom. getcmdtype() tells what is being typed there: "/" or "?" for a
@@ -84,6 +93,14 @@ map("n", "<leader>?", function()
   -- In the cheatsheet only, q closes its window.
   map("n", "q", "<cmd>close<CR>", { buffer = true, desc = "Close the cheatsheet" })
 end, { desc = "Open the cheatsheet" })
+
+-- Tap Space, then z, to turn spell checking on or off in this window. The
+-- letter is z because Neovim's spelling keys start with it: z= suggests a
+-- fix, zg adds a word. vim.wo holds the settings of the current window.
+map("n", "<leader>z", function()
+  vim.wo.spell = not vim.wo.spell
+  print("Spell checking " .. (vim.wo.spell and "on" or "off"))
+end, { desc = "Toggle spell checking" })
 
 -- Tap Space, then w, to save the file.
 map("n", "<leader>w", "<cmd>write<CR>", { desc = "Save" })

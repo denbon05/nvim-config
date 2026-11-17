@@ -7,6 +7,12 @@ vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
 -- below.
 local fzf = require("fzf-lua")
 fzf.setup({
+  -- Options for fzf itself, in every list.
+  fzf_opts = {
+    -- Moving past the end of a list continues at the other end: Up on the
+    -- first line jumps to the last one, Down on the last line to the first.
+    ["--cycle"] = true,
+  },
   keymap = {
     fzf = {
       -- true keeps every default key of fzf-lua that is not listed here.
@@ -74,6 +80,11 @@ local git_views = {
 local function show_git_changes(view_name)
   local view = git_views[view_name]
 
+  -- Remember the view, so that the next Space g opens it again. Neovim saves
+  -- a global variable whose name is all capitals when it quits (in the
+  -- "shada" file), so the view is remembered after a restart too.
+  vim.g.GIT_CHANGES_VIEW = view_name
+
   -- The settings fzf-lua uses to show a diff on the right. They are copied,
   -- and the copy gets this view's diff command.
   local previewer = vim.deepcopy(require("fzf-lua.config").globals.previewers.git_diff)
@@ -117,8 +128,13 @@ end
 -- Tap Space, then g, to list the files changed since the last commit ("git").
 -- The list is on the left and the diff of the selected file is on the right.
 -- Shift-Down and Shift-Up scroll the diff, and Enter opens the file.
+-- It opens the view used last; the very first time, all the changes.
 vim.keymap.set("n", "<leader>g", function()
-  show_git_changes("all")
+  local view_name = vim.g.GIT_CHANGES_VIEW
+  if not git_views[view_name] then
+    view_name = "all"
+  end
+  show_git_changes(view_name)
 end, { desc = "Git changes" })
 
 -- Smooth scrolling. Without it a scroll redraws the screen in one step and

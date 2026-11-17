@@ -28,3 +28,6 @@ require("config.treesitter")
 
 -- Run lua/config/diff.lua, which shows git changes inside the file.
 require("config.diff")
+
+-- Run lua/config/jumps.lua, which makes [m and ]m land on function names.
+require("config.jumps")

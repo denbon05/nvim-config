@@ -12,14 +12,14 @@ Space Shift-f *  The same, including files git ignores (.env, docs/steps)
 Space / *        Search for text in every file of the project
 Space b *        Pick one of the open files
 Space g *        List the files changed since the last commit, with the diff
-                 on the right
+                 on the right. Opens the view I used last (Ctrl-r / s / a)
 Space e *        Show or hide the file list on the left
 :e path + Tab    Open a file by its path
 :e               Read the current file from disk again
 :e!              The same, and throw away my unsaved changes
 ```
 
-Inside a search window: type to narrow the list, `Ctrl-j` / `Ctrl-k` or the arrows move the selection, `Enter` opens, `Esc` closes. The right side is a preview:
+Inside a search window: type to narrow the list, `Ctrl-j` / `Ctrl-k` or the arrows move the selection (past the last line it continues from the first, and back), `Enter` opens, `Esc` closes. The right side is a preview:
 
 ```
 Shift-Down / Shift-Up                Scroll the preview by half a page
@@ -39,13 +39,14 @@ Ctrl-s        Show only the staged files, and only their staged changes
 Ctrl-a        Show all the changes again
 ```
 
-`:FzfLua` lists every search it has. `:FzfLua keymaps` searches all shortcuts.
+`:FzfLua` lists every search it has. `:FzfLua keymaps` searches all shortcuts. `:FzfLua git_blame` lists who changed each line of the file and when; the preview shows that commit.
 
 ## Review changes
 
 The line numbers of added, changed and deleted lines are colored. A staged change counts as reviewed and is no longer marked.
 
 ```
+Space s *          Stage the whole file I am in. Saves it first
 Space o *          Show or hide the changes inside every open file: deleted
                    lines appear above, added lines get a background
 Ctrl-n / Ctrl-p *  Jump to the next / previous change in the file and scroll
@@ -59,9 +60,10 @@ The lines pinned at the top of the window are the class and function the cursor 
 
 ```
 gd                  Go to the definition of the name, shown mid-screen
-Ctrl-o / Ctrl-i     Jump back / forward through the places I jumped from
-[m / ]m             Jump up to the def or class line the cursor is in / down
-                    to the next one
+Ctrl-o / Ctrl-i *   Jump back / forward through the places I jumped from,
+                    shown mid-screen
+[m / ]m *           Jump up to the name of the function or class the cursor
+                    is in / down to the next one (Python, JS, TS)
 grr                 List every place the name is used
 Ctrl-j, then Enter  Go down into that list and jump to the selected place
 ]q / [q             Jump to the next / previous place of the list without
@@ -110,6 +112,19 @@ Space d *       Add or remove a breakpoint() line (debugger; in JS and TS)
 ```
 
 Completion in Insert mode: the menu opens by itself, `Ctrl-n` / `Ctrl-p` choose, `Ctrl-y` accepts.
+
+## Spelling
+
+English and Russian. Off until I turn it on; in code only comments and strings are checked.
+
+```
+Space z *  Turn spell checking on or off in this window. Misspelled
+           words get underlined
+]s / [s    Jump to the next / previous misspelled word
+z=         List the fixes for the word: type a number, then Enter
+zg / zw    Mark the word as correct / wrong in my own word list
+zug        Undo zg or zw on the word
+```
 
 ## Copy
 

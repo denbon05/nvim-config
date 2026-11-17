@@ -92,6 +92,35 @@ vim.keymap.set("n", "<C-p>", function()
   show_whole_change()
 end, { desc = "Previous change, fully visible" })
 
+-- Tap Space, then s, to stage the whole file you are in ("stage"), the same
+-- as Left in the Space g list. A new file is staged too.
+vim.keymap.set("n", "<leader>s", function()
+  -- The full path of the file in this window. It is empty in a window that
+  -- shows no file, such as a new unsaved one.
+  local path = vim.api.nvim_buf_get_name(0)
+  if path == "" then
+    print("This window shows no file")
+    return
+  end
+
+  -- Save the file if it has unsaved changes, so that what gets staged is
+  -- what you see.
+  vim.cmd("update")
+
+  -- Run "git add" in the file's folder and wait until it finishes.
+  -- vim.system starts git directly, without a shell, so a path with spaces
+  -- is safe. "--" tells git that what follows is a file name.
+  local git_add = vim.system({ "git", "add", "--", path }, { cwd = vim.fs.dirname(path) }):wait()
+  if git_add.code == 0 then
+    -- mini.diff notices the staging by itself and removes the colors from
+    -- the line numbers. "%" is the file's path as shown in the status line.
+    print("Staged " .. vim.fn.expand("%"))
+  else
+    -- Show git's own message, such as "not a git repository".
+    vim.notify(git_add.stderr, vim.log.levels.ERROR)
+  end
+end, { desc = "Stage the current file" })
+
 -- Overlay colors for a changed line: the old text red, the new text green,
 -- the same as deleted and added lines. By default the color scheme paints
 -- both of them red, so old and new text are hard to tell apart.

@@ -46,3 +46,7 @@ o.undofile = true
 
 -- Share copy and paste with macOS. Note that deleting text also copies it.
 o.clipboard = "unnamedplus"
+
+-- The languages spell checking uses, once Space z turns it on. English comes
+-- with Neovim; the first time, Neovim offers to download Russian: press y.
+o.spelllang = "en,ru"

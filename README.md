@@ -43,7 +43,8 @@ Then start Neovim, or run `:restart` if it is open. A plugin that was added is d
     ├── lsp.lua            Language servers: errors, go to definition, completion
     ├── colors.lua         Color scheme: VS Code light and dark, follows the terminal
     ├── treesitter.lua     Detailed syntax highlighting with tree-sitter
-    └── diff.lua           Git changes inside the file, jumps between them
+    ├── diff.lua           Git changes inside the file, jumps between them
+    └── jumps.lua          [m and ]m land on function and class names
 ```
 
 ## Shortcuts
