@@ -1,5 +1,5 @@
 {
-  "title": "Caps Lock: Ctrl when held, Esc when tapped",
+  "title": "Caps Lock: Ctrl when held, Esc when tapped; Esc: Caps Lock",
   "rules": [
     {
       "description": "Caps Lock: Ctrl when held with another key, Esc when tapped alone",
@@ -12,6 +12,19 @@
           },
           "to": [{ "key_code": "left_control", "lazy": true }],
           "to_if_alone": [{ "key_code": "escape" }]
+        }
+      ]
+    },
+    {
+      "description": "Esc: turns Caps Lock on and off",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "escape",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "caps_lock" }]
         }
       ]
     }

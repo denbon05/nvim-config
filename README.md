@@ -15,7 +15,7 @@ brew bundle --file ~/.config/nvim/Brewfile
 
 On the first start, Neovim asks before downloading the plugins: press `y`. The syntax parsers are then built in the background, so restart Neovim once more to see the colors. The versions are pinned in `nvim-pack-lock.json`.
 
-For a Python project that uses uv, start Neovim with `uv run nvim .` so Pyright can find the packages in `.venv`.
+For a Python project that uses uv, start Neovim with `uv run nvim .` so basedpyright can find the packages in `.venv`.
 
 delta shows the diffs of `git diff` and of `Space` `g`. Its settings live in `~/.gitconfig`, which is not in this repo, so add them there on a new machine:
 
@@ -35,7 +35,7 @@ delta shows the diffs of `git diff` and of `Space` `g`. Its settings live in `~/
 	side-by-side = true
 ```
 
-Caps Lock works as `Ctrl` when held with another key and as `Esc` when tapped alone, so the left little finger reaches both from where it rests. macOS can't give one key two roles, so Karabiner-Elements does it (it is in the `Brewfile`); the rule is `karabiner/caps-lock.json`. On a new machine:
+Caps Lock works as `Ctrl` when held with another key and as `Esc` when tapped alone, so the left little finger reaches both from where it rests. Esc, in turn, turns Caps Lock on and off. macOS can't give one key two roles, so Karabiner-Elements does it (it is in the `Brewfile`); the rule is `karabiner/caps-lock.json`. On a new machine:
 
 1. Open Karabiner-Elements and allow what macOS asks for: its driver extension and Input Monitoring.
 2. Copy the rule where Karabiner looks for rules:
@@ -45,7 +45,7 @@ Caps Lock works as `Ctrl` when held with another key and as `Esc` when tapped al
    cp ~/.config/nvim/karabiner/caps-lock.json ~/.config/karabiner/assets/complex_modifications/
    ```
 
-3. In Karabiner-Elements: Complex Modifications → Add predefined rule → "Caps Lock: Ctrl when held, Esc when tapped" → Enable.
+3. In Karabiner-Elements: Complex Modifications → Add predefined rule → "Caps Lock: Ctrl when held, Esc when tapped; Esc: Caps Lock" → Enable All.
 
 Leave macOS's own Modifier Keys setting at its defaults, so the two don't remap the same key.
 
@@ -68,7 +68,7 @@ Then start Neovim, or run `:restart` if it is open. A plugin that was added is d
 ├── Brewfile               Homebrew packages the config needs
 ├── CHEATSHEET.md          Every shortcut I use
 ├── karabiner/
-│   └── caps-lock.json     Caps Lock: Ctrl when held, Esc when tapped
+│   └── caps-lock.json     Caps Lock: Ctrl when held, Esc when tapped; Esc: Caps Lock
 ├── nvim-pack-lock.json    Plugin versions, written by vim.pack
 └── lua/config/
     ├── options.lua        Editor settings

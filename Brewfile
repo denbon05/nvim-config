@@ -9,9 +9,10 @@ brew "fzf"
 brew "ripgrep"
 brew "fd"
 
-# Language servers: Pyright and Ruff for Python, the last one for TypeScript
-# and JavaScript (TypeScript 7 has the language server built in).
-brew "pyright"
+# Language servers: basedpyright (Pyright with more checks) and Ruff for
+# Python, the last one for TypeScript and JavaScript (TypeScript 7 has the
+# language server built in).
+brew "basedpyright"
 brew "ruff"
 brew "typescript"
 

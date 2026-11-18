@@ -1,6 +1,6 @@
 # Cheatsheet
 
-Keys are tapped one after another, except `Ctrl`, `Shift` and `Option`, which are held. Caps Lock is `Ctrl` when held and `Esc` when tapped (Karabiner, see the README). Everything is for Normal mode unless it says otherwise. `Space` `?` opens this file, `q` closes it.
+Keys are tapped one after another, except `Ctrl`, `Shift` and `Option`, which are held. Caps Lock is `Ctrl` when held and `Esc` when tapped, and Esc turns Caps Lock on and off (Karabiner, see the README). Everything is for Normal mode unless it says otherwise. `Space` `?` opens this file, `q` closes it.
 
 Keys marked with * are my own shortcuts from this config. The rest are built into Neovim.
 
