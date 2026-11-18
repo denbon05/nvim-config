@@ -1,6 +1,6 @@
 # Cheatsheet
 
-Keys are tapped one after another, except `Ctrl`, `Shift` and `Option`, which are held. Everything is for Normal mode unless it says otherwise. `Space` `?` opens this file, `q` closes it.
+Keys are tapped one after another, except `Ctrl`, `Shift` and `Option`, which are held. Caps Lock is `Ctrl` when held and `Esc` when tapped (Karabiner, see the README). Everything is for Normal mode unless it says otherwise. `Space` `?` opens this file, `q` closes it.
 
 Keys marked with * are my own shortcuts from this config. The rest are built into Neovim.
 
@@ -9,11 +9,19 @@ Keys marked with * are my own shortcuts from this config. The rest are built int
 ```
 Space f *        Find a file by part of its name
 Space Shift-f *  The same, including files git ignores (.env, docs/steps)
-Space / *        Search for text in every file of the project
+Space / *        Search for text in every file of the project. What I type
+                 is a regex: . ( [ * and the like have a special meaning
+:FzfLua grep     The same for text exactly as typed, no regex: paste it at
+                 "Grep For>", Enter. Typing then filters the lines found,
+                 Ctrl-g switches back to the regex search
 Space b *        Pick one of the open files
 Space g *        List the files changed since the last commit, with the diff
                  on the right. Opens the view I used last (Ctrl-r / s / a)
 Space e *        Show or hide the file list on the left
+gf               Open the file whose path is under the cursor. On a markdown
+                 link with #heading it lands on that heading. Ctrl-o goes back
+gx               Open the path or link under the cursor in its macOS app or
+                 the browser
 :e path + Tab    Open a file by its path
 :e               Read the current file from disk again
 :e!              The same, and throw away my unsaved changes
@@ -40,6 +48,27 @@ Ctrl-a        Show all the changes again
 ```
 
 `:FzfLua` lists every search it has. `:FzfLua keymaps` searches all shortcuts. `:FzfLua git_blame` lists who changed each line of the file and when; the preview shows that commit.
+
+In the `Space` `e` file list:
+
+```
+Enter    Open the file / go into the folder
+-        Go up one folder
+%        New file: asks the name and opens it. It appears on disk when I
+         save it
+d        New folder (directory)
+R        Rename. Change the folder in the path to move the file
+D        Delete, after y + Enter. Not to the Trash: a folder goes with all
+         inside, and only files in git come back (git restore)
+x        Open the file in its macOS app (Preview, Excel, Pages). For PDF,
+         Word, Excel: Neovim can't show them
+gh       Show / hide the files that start with a dot (.env, .github)
+F5 *     Refresh the list: files made outside Neovim show up only then.
+         Space e twice does it too, but goes back to the project folder
+I        Hide / show the help at the top
+i        Change the view: list, details, columns, tree
+mf mt    Mark a file, then the folder to put it in. mc copies, mm moves
+```
 
 ## Review changes
 

@@ -17,6 +17,38 @@ On the first start, Neovim asks before downloading the plugins: press `y`. The s
 
 For a Python project that uses uv, start Neovim with `uv run nvim .` so Pyright can find the packages in `.venv`.
 
+delta shows the diffs of `git diff` and of `Space` `g`. Its settings live in `~/.gitconfig`, which is not in this repo, so add them there on a new machine:
+
+```ini
+[core]
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	line-numbers = true
+	# Show only the new file's line numbers: one column instead of two.
+	# A deleted line gets no number, it is not in the new file.
+	line-numbers-left-format = ""
+	pager = less -iR
+[delta "wide"]
+	side-by-side = true
+```
+
+Caps Lock works as `Ctrl` when held with another key and as `Esc` when tapped alone, so the left little finger reaches both from where it rests. macOS can't give one key two roles, so Karabiner-Elements does it (it is in the `Brewfile`); the rule is `karabiner/caps-lock.json`. On a new machine:
+
+1. Open Karabiner-Elements and allow what macOS asks for: its driver extension and Input Monitoring.
+2. Copy the rule where Karabiner looks for rules:
+
+   ```sh
+   mkdir -p ~/.config/karabiner/assets/complex_modifications
+   cp ~/.config/nvim/karabiner/caps-lock.json ~/.config/karabiner/assets/complex_modifications/
+   ```
+
+3. In Karabiner-Elements: Complex Modifications → Add predefined rule → "Caps Lock: Ctrl when held, Esc when tapped" → Enable.
+
+Leave macOS's own Modifier Keys setting at its defaults, so the two don't remap the same key.
+
 ## Update
 
 On a machine that already has the config:
@@ -35,6 +67,8 @@ Then start Neovim, or run `:restart` if it is open. A plugin that was added is d
 ├── init.lua               Entry point: sets the leader key, loads the modules
 ├── Brewfile               Homebrew packages the config needs
 ├── CHEATSHEET.md          Every shortcut I use
+├── karabiner/
+│   └── caps-lock.json     Caps Lock: Ctrl when held, Esc when tapped
 ├── nvim-pack-lock.json    Plugin versions, written by vim.pack
 └── lua/config/
     ├── options.lua        Editor settings
@@ -44,7 +78,8 @@ Then start Neovim, or run `:restart` if it is open. A plugin that was added is d
     ├── colors.lua         Color scheme: VS Code light and dark, follows the terminal
     ├── treesitter.lua     Detailed syntax highlighting with tree-sitter
     ├── diff.lua           Git changes inside the file, jumps between them
-    └── jumps.lua          [m and ]m land on function and class names
+    ├── jumps.lua          [m and ]m land on function and class names
+    └── links.lua          gf opens markdown links at their heading
 ```
 
 ## Shortcuts

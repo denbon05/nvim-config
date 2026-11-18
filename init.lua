@@ -31,3 +31,6 @@ require("config.diff")
 
 -- Run lua/config/jumps.lua, which makes [m and ]m land on function names.
 require("config.jumps")
+
+-- Run lua/config/links.lua, which makes gf open markdown links at a heading.
+require("config.links")

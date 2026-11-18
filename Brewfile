@@ -20,3 +20,6 @@ brew "tree-sitter-cli"
 
 # Shows git diffs with colors and line numbers, in git and in the Space g preview.
 brew "git-delta"
+
+# Turns Caps Lock into Ctrl when held and Esc when tapped (rule in karabiner/).
+cask "karabiner-elements"

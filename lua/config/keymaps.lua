@@ -124,6 +124,27 @@ map("n", "<C-k>", "<C-w>k")
 -- Hold Ctrl and press l to move to the split on the right.
 map("n", "<C-l>", "<C-w>l")
 
+-- The file list (Space e) has shortcuts of its own, and there Ctrl-l reads
+-- the folder again, to show files made outside Neovim. The file list leaves
+-- Ctrl-l alone when another key does that, so F5 does it here, and Ctrl-l
+-- moves to the split on the right in the file list too.
+-- The FileType event runs when a file list opens. buffer = args.buf makes
+-- the keys work in that file list only.
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "netrw",
+  callback = function(args)
+    -- <Plug>NetrwRefresh is the file list's own refresh. remap = true lets
+    -- F5 run it.
+    map("n", "<F5>", "<Plug>NetrwRefresh", {
+      buffer = args.buf,
+      remap = true,
+      desc = "Refresh the file list",
+    })
+    -- The file list may have taken Ctrl-l before this runs: take it back.
+    map("n", "<C-l>", "<C-w>l", { buffer = args.buf })
+  end,
+})
+
 -- Tap Space, then y, then p, to copy the full path of the current file
 -- ("yank path"). expand("%:p") gives the path: % is the current file and :p
 -- makes it a full path. setreg("+", ...) puts it into the macOS clipboard.
