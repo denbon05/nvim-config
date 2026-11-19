@@ -106,6 +106,9 @@ K K                 Enter the description window to copy from it. q closes it
 n / N               Jump to the next / previous match, shown mid-screen
 *                   Find the word under the cursor, shown mid-screen
 Esc *               Clear the search highlights
+%                   Jump from a bracket ( [ { to its pair and back. Not on a
+                    bracket: to the next one on the line. d% deletes up to
+                    the pair, v% selects it
 } / {               Jump to the next / previous empty line
 Ctrl-e / Ctrl-y     Scroll the text one line down / up. The cursor stays on
                     its line. 5 Ctrl-e scrolls five lines
@@ -114,6 +117,18 @@ Ctrl-f / Ctrl-b     Scroll a whole screen down / up
 gg / G              Start / end of the file
 5j / 5k             Five lines down / up. The left margin shows the number
 f + character       Jump to that character on this line
+```
+
+## Read markdown
+
+Markdown files are drawn readable: headings, bullets, checkboxes, tables and code blocks with the icon of their language, without the `**` and backticks. Math between `$` signs shows as Unicode, `$x^2$` as x². The line with the cursor, and the whole file in Insert mode, stays raw for editing.
+
+```
+Space m *  Switch between the drawn and the raw markdown in this file.
+           Other files, such as this cheatsheet, stay as they are
+Space p *  Open the file in the browser, drawn like on GitHub, with images
+           and mermaid diagrams. The page follows my edits and the cursor.
+           Space p again closes it
 ```
 
 ## Errors and warnings

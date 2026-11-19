@@ -21,7 +21,12 @@ vim.pack.add({ "https://github.com/nvim-treesitter/nvim-treesitter" })
 
 -- Download and build a parser for each of these languages. This runs in the
 -- background on the first start and does nothing once they are installed.
--- "tsx" is TypeScript with JSX, used in React files.
+-- "tsx" is TypeScript with JSX, used in React files. "markdown" reads the
+-- blocks of a markdown file (headings, lists, code) and "markdown_inline" the
+-- text inside them (bold, links, `code`); lua/config/markdown.lua needs both.
+-- It also uses "html" for the HTML tags and comments in a markdown file, and
+-- "latex" for math between $ signs. "mermaid" colors the code of the
+-- diagrams in ```mermaid blocks.
 require("nvim-treesitter").install({
   "python",
   "typescript",
@@ -31,6 +36,11 @@ require("nvim-treesitter").install({
   "yaml",
   "toml",
   "bash",
+  "markdown",
+  "markdown_inline",
+  "html",
+  "latex",
+  "mermaid",
 })
 
 -- Each time a file is opened, turn tree-sitter highlighting on for it.

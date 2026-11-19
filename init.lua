@@ -34,3 +34,6 @@ require("config.jumps")
 
 -- Run lua/config/links.lua, which makes gf open markdown links at a heading.
 require("config.links")
+
+-- Run lua/config/markdown.lua, which draws markdown files in a readable way.
+require("config.markdown")

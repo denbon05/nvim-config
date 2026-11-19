@@ -1,6 +1,6 @@
 # nvim-config
 
-My personal Neovim config, built up in small steps while I learn. It uses Neovim's built-in plugin manager, `vim.pack`, and only four plugins.
+My personal Neovim config, built up in small steps while I learn. It uses Neovim's built-in plugin manager, `vim.pack`, and only ten plugins.
 
 Tested on Neovim 0.12.6 on macOS.
 
@@ -14,6 +14,8 @@ brew bundle --file ~/.config/nvim/Brewfile
 `brew bundle` installs every tool listed in `Brewfile`: Neovim, the search tools, the language servers, the tree-sitter CLI and delta, which shows diffs.
 
 On the first start, Neovim asks before downloading the plugins: press `y`. The syntax parsers are then built in the background, so restart Neovim once more to see the colors. The versions are pinned in `nvim-pack-lock.json`.
+
+The icons (in markdown headings, checkboxes and code blocks) come from Symbols Nerd Font, which the Brewfile installs. Tell iTerm to use it for them: Settings → Profiles → Text, tick "Use a different font for non-ASCII text" and pick "Symbols Nerd Font Mono". The letters stay in the main font. Without it the icons show as empty boxes.
 
 For a Python project that uses uv, start Neovim with `uv run nvim .` so basedpyright can find the packages in `.venv`.
 
@@ -79,7 +81,8 @@ Then start Neovim, or run `:restart` if it is open. A plugin that was added is d
     ├── treesitter.lua     Detailed syntax highlighting with tree-sitter
     ├── diff.lua           Git changes inside the file, jumps between them
     ├── jumps.lua          [m and ]m land on function and class names
-    └── links.lua          gf opens markdown links at their heading
+    ├── links.lua          gf opens markdown links at their heading
+    └── markdown.lua       Markdown drawn readable in the file, and previewed in the browser
 ```
 
 ## Shortcuts

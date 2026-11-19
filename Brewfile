@@ -19,6 +19,14 @@ brew "typescript"
 # Builds the tree-sitter parsers for syntax highlighting.
 brew "tree-sitter-cli"
 
+# Turns LaTeX math in markdown files ($x^2$) into Unicode text, for
+# render-markdown (lua/config/markdown.lua).
+brew "utftex"
+
+# Icons only (file types, headings, checkboxes), no letters. In iTerm it is the
+# font for non-ASCII text, so the letters stay in Menlo (see the README).
+cask "font-symbols-only-nerd-font"
+
 # Shows git diffs with colors and line numbers, in git and in the Space g preview.
 brew "git-delta"
 
