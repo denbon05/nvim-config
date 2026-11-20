@@ -25,6 +25,20 @@ fzf.setup({
       ["shift-up"] = "preview-half-page-up",
     },
   },
+  -- Options for the file search only (Space f and Space Shift-f).
+  files = {
+    -- The same layout as the list of changed files on Space g.
+    winopts = {
+      -- Use the whole screen.
+      fullscreen = true,
+      preview = {
+        -- Put the preview on the right and give it 70% of the width,
+        -- which leaves a narrow column for the file list.
+        layout = "horizontal",
+        horizontal = "right:70%",
+      },
+    },
+  },
 })
 
 -- Tap Space, then f, to find a file by typing part of its name (like Cmd+P).

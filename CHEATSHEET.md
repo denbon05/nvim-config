@@ -7,7 +7,8 @@ Keys marked with * are my own shortcuts from this config. The rest are built int
 ## Open a file
 
 ```
-Space f *        Find a file by part of its name
+Space f *        Find a file by part of its name. Full screen, the list on
+                 the left and the file on the right, like Space g
 Space Shift-f *  The same, including files git ignores (.env, docs/steps)
 Space / *        Search for text in every file of the project. What I type
                  is a regex: . ( [ * and the like have a special meaning
@@ -38,9 +39,10 @@ F4                                   Hide or show the preview
 In the `Space` `g` list only:
 
 ```
-Left / Right  Stage / unstage the selected file
-Ctrl-x        Throw away the file's changes (deletes a new file). It asks
-              first
+Left / Right  Stage / unstage the selected file. Right only moves staged
+              changes back to unstaged: it never throws anything away
+Ctrl-x        Throw away ALL the file's changes since the last commit,
+              the staged ones too (deletes a new file). It asks first
 Ctrl-r        Show only the files that still have unstaged changes, and
               only those changes ("to review")
 Ctrl-s        Show only the staged files, and only their staged changes
@@ -81,6 +83,8 @@ Space o *          Show or hide the changes inside every open file: deleted
 Ctrl-n / Ctrl-p *  Jump to the next / previous change in the file and scroll
                    so the whole change is visible
 gh gh              Stage the change under the cursor
+:Restore *         Throw away the unstaged and unsaved changes of the file
+                   I am in. The staged ones stay. It asks first
 ```
 
 ## Move through code
@@ -227,6 +231,10 @@ git -c delta.side-by-side=true diff  The same, old and new side by side
 git diff path                        Show the changes of one file
 git add -p                           Stage piece by piece: y takes a piece, n
                                      skips it
+git restore path                     Throw away the unstaged changes of a
+                                     file. The staged ones stay
+git restore -p path                  The same piece by piece: y throws a
+                                     piece away, n keeps it
 ```
 
 ## When lost

@@ -121,6 +121,42 @@ vim.keymap.set("n", "<leader>s", function()
   end
 end, { desc = "Stage the current file" })
 
+-- Type :Restore and press Enter to throw away the unstaged changes of the
+-- file you are in, and its unsaved ones. The staged changes stay. It asks
+-- first, because the changes can't be brought back. Ctrl-x in the Space g
+-- list throws away the staged ones too.
+vim.api.nvim_create_user_command("Restore", function()
+  -- The full path of the file in this window. It is empty in a window that
+  -- shows no file, such as a new unsaved one.
+  local path = vim.api.nvim_buf_get_name(0)
+  if path == "" then
+    print("This window shows no file")
+    return
+  end
+
+  -- confirm shows the question with the choices and returns the number of
+  -- the one picked: 1 is Yes. The last argument makes No the choice of
+  -- Enter, so a hasty Enter changes nothing. Esc returns 0, also nothing.
+  local question = "Throw away the unstaged changes of " .. vim.fn.expand("%") .. "?"
+  if vim.fn.confirm(question, "&Yes\n&No", 2) ~= 1 then
+    return
+  end
+
+  -- Run "git restore" in the file's folder and wait until it finishes. It
+  -- writes the staged version of the file back to disk, or the last commit
+  -- if nothing is staged. "--" tells git that what follows is a file name.
+  local git_restore = vim.system({ "git", "restore", "--", path }, { cwd = vim.fs.dirname(path) }):wait()
+  if git_restore.code == 0 then
+    -- The file on disk changed: read it again and drop the text on screen.
+    vim.cmd("edit!")
+    print("Restored " .. vim.fn.expand("%"))
+  else
+    -- Show git's own message, such as "did not match any file(s) known to
+    -- git" for a new file git doesn't know yet.
+    vim.notify(git_restore.stderr, vim.log.levels.ERROR)
+  end
+end, { desc = "Throw away the unstaged changes of the current file" })
+
 -- Overlay colors for a changed line: the old text red, the new text green,
 -- the same as deleted and added lines. By default the color scheme paints
 -- both of them red, so old and new text are hard to tell apart.
