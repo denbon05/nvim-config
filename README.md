@@ -72,6 +72,8 @@ Then start Neovim, or run `:restart` if it is open. A plugin that was added is d
 ├── karabiner/
 │   └── caps-lock.json     Caps Lock: Ctrl when held, Esc when tapped; Esc: Caps Lock
 ├── nvim-pack-lock.json    Plugin versions, written by vim.pack
+├── syntax/
+│   └── cedar.lua          Colors for Cedar and Dogwood policies and Cedar schemas
 └── lua/config/
     ├── options.lua        Editor settings
     ├── keymaps.lua        Shortcuts
@@ -82,7 +84,8 @@ Then start Neovim, or run `:restart` if it is open. A plugin that was added is d
     ├── diff.lua           Git changes inside the file, jumps between them
     ├── jumps.lua          [m and ]m land on function and class names
     ├── links.lua          gf opens markdown links at their heading
-    └── markdown.lua       Markdown drawn readable in the file, and previewed in the browser
+    ├── markdown.lua       Markdown drawn readable in the file, and previewed in the browser
+    └── cedar.lua          .dw and .cedarschema files open as Cedar
 ```
 
 ## Shortcuts

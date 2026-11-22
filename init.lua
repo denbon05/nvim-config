@@ -37,3 +37,7 @@ require("config.links")
 
 -- Run lua/config/markdown.lua, which draws markdown files in a readable way.
 require("config.markdown")
+
+-- Run lua/config/cedar.lua, which marks Dogwood and Cedar schema files as
+-- Cedar, so that syntax/cedar.lua colors them.
+require("config.cedar")
