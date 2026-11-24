@@ -16,6 +16,10 @@
       "rev": "fc90b3925a2a68282be06e28cfe0cbb366c75dad",
       "src": "https://github.com/nvim-mini/mini.icons"
     },
+    "mini.splitjoin": {
+      "rev": "f40a3f239ced93213d7dd5ef9a4aee6f5df7f83d",
+      "src": "https://github.com/nvim-mini/mini.splitjoin"
+    },
     "neoscroll.nvim": {
       "rev": "c8d29979cb0cb3a2437a8e0ae683fd82f340d3b8",
       "src": "https://github.com/karb94/neoscroll.nvim"

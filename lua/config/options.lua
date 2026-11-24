@@ -50,3 +50,10 @@ o.clipboard = "unnamedplus"
 -- The languages spell checking uses, once Space z turns it on. English comes
 -- with Neovim; the first time, Neovim offers to download Russian: press y.
 o.spelllang = "en,ru"
+
+-- Ctrl-o and Ctrl-i walk the list of places I jumped from. By default a jump
+-- made after some Ctrl-o goes to the end of that list, so the places I went
+-- back over stay in it, and Ctrl-o later walks that old path again. "stack"
+-- drops them instead, like a browser's Back button after clicking a new link.
+-- "clean", the default, drops the places in files that are no longer open.
+o.jumpoptions = "stack,clean"

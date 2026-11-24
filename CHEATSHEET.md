@@ -4,6 +4,8 @@ Keys are tapped one after another, except `Ctrl`, `Shift` and `Option`, which ar
 
 Keys marked with * are my own shortcuts from this config. The rest are built into Neovim.
 
+`;` and `:` are swapped in Normal and Visual mode (*): `;` starts a command, so every `:command` below is typed as `;command`. `:` (Shift-`;`) repeats the last `f` / `t` jump.
+
 ## Open a file
 
 ```
@@ -11,7 +13,13 @@ Space f *        Find a file by part of its name. Full screen, the list on
                  the left and the file on the right, like Space g
 Space Shift-f *  The same, including files git ignores (.env, docs/steps)
 Space / *        Search for text in every file of the project. What I type
-                 is a regex: . ( [ * and the like have a special meaning
+                 is a regex: . ( [ * and the like have a special meaning.
+                 Full screen, long lines wrap. Inside it, Ctrl-s turns keep
+                 mode on or off: while on ("Grep (kept)>"), Space / opens
+                 with my last search. Ctrl-r turns review mode on or
+                 off: while on ("to review" in the prompt), only the
+                 files with unstaged changes and new files are searched,
+                 like Ctrl-r in Space g. Ctrl-u clears the text
 :FzfLua grep     The same for text exactly as typed, no regex: paste it at
                  "Grep For>", Enter. Typing then filters the lines found,
                  Ctrl-g switches back to the regex search
@@ -26,6 +34,8 @@ gx               Open the path or link under the cursor in its macOS app or
 :e path + Tab    Open a file by its path
 :e               Read the current file from disk again
 :e!              The same, and throw away my unsaved changes
+:Delete *        Move the file I am in to the Trash and close it. It asks
+                 first. Finder's Put Back restores it
 ```
 
 Inside a search window: type to narrow the list, `Ctrl-j` / `Ctrl-k` or the arrows move the selection (past the last line it continues from the first, and back), `Enter` opens, `Esc` closes. The right side is a preview:
@@ -49,7 +59,7 @@ Ctrl-s        Show only the staged files, and only their staged changes
 Ctrl-a        Show all the changes again
 ```
 
-`:FzfLua` lists every search it has. `:FzfLua keymaps` searches all shortcuts. `:FzfLua git_blame` lists who changed each line of the file and when; the preview shows that commit.
+`:FzfLua` lists every search it has. `:FzfLua keymaps` searches all shortcuts.
 
 In the `Space` `e` file list:
 
@@ -60,8 +70,9 @@ Enter    Open the file / go into the folder
          save it
 d        New folder (directory)
 R        Rename. Change the folder in the path to move the file
-D        Delete, after y + Enter. Not to the Trash: a folder goes with all
-         inside, and only files in git come back (git restore)
+D *      Move to the Trash, after y. Takes the files marked with mf, or
+         the lines selected with V, or the cursor line. A folder goes with
+         all inside. Finder's Put Back restores. Not in the tree view (i)
 x        Open the file in its macOS app (Preview, Excel, Pages). For PDF,
          Word, Excel: Neovim can't show them
 gh       Show / hide the files that start with a dot (.env, .github)
@@ -83,32 +94,38 @@ Space o *          Show or hide the changes inside every open file: deleted
 Ctrl-n / Ctrl-p *  Jump to the next / previous change in the file and scroll
                    so the whole change is visible
 gh gh              Stage the change under the cursor
+Space Shift-b *    Who changed each line of the file and when ("blame"). Full
+                   screen, the commit below the list. Enter jumps to the line
 :Restore *         Throw away the unstaged and unsaved changes of the file
                    I am in. The staged ones stay. It asks first
 ```
 
 ## Move through code
 
-The lines pinned at the top of the window are the class and function the cursor is in, shown when their first line has scrolled away. The bottom right corner shows the cursor's line and column, then where the window is in the file: `Top`, `Bot`, `All` (the whole file fits) or a percentage.
+The lines pinned at the top of the window are the class and function the cursor is in, shown when their first line has scrolled away. The bottom right corner shows the cursor's line and column, then where the window is in the file: `Top`, `Bot`, `All` (the whole file fits) or a percentage. "Shown high" means the line lands a little above the middle, 30% from the top, so a pane opening at the bottom doesn't hide it.
 
 ```
-gd                  Go to the definition of the name, shown mid-screen
+gd                  Go to the definition of the name, shown high
 Ctrl-o / Ctrl-i *   Jump back / forward through the places I jumped from,
-                    shown mid-screen
+                    shown high. A new jump after some Ctrl-o forgets the
+                    places ahead, like a browser's Back
 [m / ]m *           Jump up to the name of the function or class the cursor
                     is in / down to the next one (Python, JS, TS)
 grr                 List every place the name is used
 Ctrl-j, then Enter  Go down into that list and jump to the selected place
+o *                 In that list: jump to the selected place and close the
+                    list, shown high
+q *                 In that list: close it
 ]q / [q             Jump to the next / previous place of the list without
                     entering it
 :cclose             Close the list. :copen shows it again
 K                   Show the description of the name. Moving the cursor closes
                     it
 K K                 Enter the description window to copy from it. q closes it
-/text + Enter       Jump to text in this file, shown mid-screen
+/text + Enter       Jump to text in this file, shown high
 ?text + Enter       The same, searching upwards
-n / N               Jump to the next / previous match, shown mid-screen
-*                   Find the word under the cursor, shown mid-screen
+n / N               Jump to the next / previous match, shown high
+*                   Find the word under the cursor, shown high
 Esc *               Clear the search highlights
 %                   Jump from a bracket ( [ { to its pair and back. Not on a
                     bracket: to the next one on the line. d% deletes up to
@@ -117,6 +134,7 @@ Esc *               Clear the search highlights
 Ctrl-e / Ctrl-y     Scroll the text one line down / up. The cursor stays on
                     its line. 5 Ctrl-e scrolls five lines
 Ctrl-d / Ctrl-u     Scroll half a screen down / up
+Space j / Space k * The same, without Ctrl
 Ctrl-f / Ctrl-b     Scroll a whole screen down / up
 gg / G              Start / end of the file
 5j / 5k             Five lines down / up. The left margin shows the number
@@ -138,9 +156,11 @@ Space p *  Open the file in the browser, drawn like on GitHub, with images
 ## Errors and warnings
 
 ```
-]d / [d   Next / previous problem in the file
-Ctrl-w d  Show the full text of the problem
-gra       Offer fixes for the problem
+]d / [d    Next / previous problem in the file
+Ctrl-w d   Show the full text of the problem
+gra        Offer fixes for the problem
+Space x *  Hide / show the messages at the end of the lines. The E / W
+           marks and the underlines stay
 ```
 
 ## Edit
@@ -156,10 +176,35 @@ dt + character  Delete up to that character
 u / Ctrl-r      Undo / redo
 grn             Rename the name everywhere
 gcc             Comment the line out, or back in
+J               Join the next line onto this one, with a space between
+gS *            Inside ( ) [ ] or { }: put each item between the commas on
+                a line of its own. gS again joins them back
+r + Enter       Break the line at the cursor: the character under it (the
+                space after a comma) becomes a line break
 Space d *       Add or remove a breakpoint() line (debugger; in JS and TS)
 ```
 
 Completion in Insert mode: the menu opens by itself, `Ctrl-n` / `Ctrl-p` choose, `Ctrl-y` accepts.
+
+## Replace text
+
+```
+:%s/old/new/g     Replace every match in the file (% = all lines,
+                  g = every match on a line, not just the first)
+:%s/old/new/gc    The same, asking each time: y yes, n skip, a all the
+                  rest, q stop
+:%s/old/new/gi    Ignore upper and lower case
+V, move, then :   Select lines first: Neovim types :'<,'> for me, then
+                  s/old/new/g replaces only in those lines
+:'<,'>s/\%Vold/new/g  Only inside the exact characters selected with v
+:%s//new/g        Empty pattern = my last / search. Search first, check
+                  what is highlighted, then replace
+:%s/\v(\w+)_(\w+)/\2_\1/g
+                  \v = normal regex, ( + | { need no backslash.
+                  \1 \2 = the groups in ( ), & = the whole match
+```
+
+The changes show in the file while I type the command; `Esc` cancels.
 
 ## Spelling
 

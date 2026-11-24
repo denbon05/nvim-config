@@ -24,13 +24,25 @@ vim.lsp.enable({ "basedpyright", "ruff", "tsc" })
 -- Show error messages at the end of the line where they happen.
 vim.diagnostic.config({ virtual_text = true })
 
+-- Tap Space, then x, to hide or show those messages. The E and W in the left
+-- column and the wavy underlines stay, so you still see where the problems
+-- are, and Ctrl-w d still shows the message of the cursor line.
+vim.keymap.set("n", "<leader>x", function()
+  -- vim.diagnostic.config() without anything in the brackets returns the
+  -- current settings.
+  local show = not vim.diagnostic.config().virtual_text
+  vim.diagnostic.config({ virtual_text = show })
+  print("Error messages " .. (show and "shown" or "hidden"))
+end, { desc = "Show or hide error messages" })
+
 -- When a server starts working on a file, set up the extras below for that file.
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
 
     -- gd means "go to definition": jump to where the name under the cursor is
-    -- defined, and scroll so that line is in the middle of the window.
+    -- defined, and scroll so that line is a little above the middle of the
+    -- window.
     vim.keymap.set("n", "gd", function()
       -- on_list receives the places the servers found, instead of jumping itself.
       vim.lsp.buf.definition({
@@ -48,8 +60,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
           -- Put the cursor on the name. Columns count from 0 here, hence "- 1".
           vim.api.nvim_win_set_cursor(0, { place.lnum, place.col - 1 })
 
-          -- zz scrolls the cursor line to the middle of the window.
-          vim.cmd("normal! zz")
+          -- Scroll the cursor line a little above the middle of the window.
+          require("config.center")()
         end,
       })
     end, { buffer = ev.buf, desc = "Go to definition" })

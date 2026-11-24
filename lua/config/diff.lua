@@ -63,10 +63,19 @@ local function show_whole_change()
       local free_rows = vim.api.nvim_win_get_height(0) - 2 * vim.o.scrolloff
 
       if last - first + 1 <= free_rows then
-        -- The change fits: put its middle line in the middle of the window
-        -- (zz), then move the cursor back to where it was.
+        -- The change fits: put its middle line a little above the middle of
+        -- the window, like the other jumps.
         vim.api.nvim_win_set_cursor(0, { math.floor((first + last) / 2), 0 })
-        vim.cmd("normal! zz")
+        require("config.center")()
+        -- A tall change can now start above the lines scrolloff keeps free
+        -- at the top. Then scroll its first line to the top instead (zt),
+        -- which leaves room for all of it. line("w0") is the first line on
+        -- screen.
+        if first < vim.fn.line("w0") + vim.o.scrolloff then
+          vim.api.nvim_win_set_cursor(0, { first, 0 })
+          vim.cmd("normal! zt")
+        end
+        -- Move the cursor back to where it was.
         vim.api.nvim_win_set_cursor(0, cursor)
       else
         -- The change is taller than the window: show as much of it as

@@ -7,34 +7,45 @@ local map = vim.keymap.set
 -- Esc also clears the yellow highlights left behind by a search.
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
+-- ; and : swap places in Normal and Visual mode, so a command starts with ;
+-- without Shift, and Shift-; repeats the last f or t jump that ; did before.
+-- "x" is Visual mode. Keys typed on the command line itself don't change.
+map({ "n", "x" }, ";", ":", { desc = "Start a command" })
+map({ "n", "x" }, ":", ";", { desc = "Repeat the last f / t jump" })
+
+-- The keys that scroll the cursor line a little above the middle of the
+-- window, "high". See lua/config/center.lua for why not the middle.
+-- <Cmd>...<CR> runs it after the jump, without leaving Normal mode.
+local high = "<Cmd>lua require('config.center')()<CR>"
+
 -- After a search, n and N jump to the next and previous match, and * searches
--- for the word under the cursor. Here each of them also runs zz, which
--- scrolls the line with the match to the middle of the window.
-map("n", "n", "nzz", { desc = "Next match, mid-screen" })
-map("n", "N", "Nzz", { desc = "Previous match, mid-screen" })
-map("n", "*", "*zz", { desc = "Find the word under the cursor, mid-screen" })
+-- for the word under the cursor. Here each of them also scrolls the line with
+-- the match high. A count still works: 3n jumps to the third match.
+map("n", "n", "n" .. high, { desc = "Next match, shown high" })
+map("n", "N", "N" .. high, { desc = "Previous match, shown high" })
+map("n", "*", "*" .. high, { desc = "Find the word under the cursor, shown high" })
 
 -- Ctrl-o and Ctrl-i jump back and forward through the places you jumped
--- from, such as the line before a gd. Here they also run zz, so the place
--- you land on is in the middle of the window, like after gd.
-map("n", "<C-o>", "<C-o>zz", { desc = "Jump back, mid-screen" })
-map("n", "<C-i>", "<C-i>zz", { desc = "Jump forward, mid-screen" })
+-- from, such as the line before a gd. Here they also scroll the place you
+-- land on high, like after gd.
+map("n", "<C-o>", "<C-o>" .. high, { desc = "Jump back, shown high" })
+map("n", "<C-i>", "<C-i>" .. high, { desc = "Jump forward, shown high" })
 -- Most terminals send the same key for Tab and Ctrl-i, and Tab in Normal
 -- mode jumps forward too. Map it the same way, so both keys behave alike.
-map("n", "<Tab>", "<Tab>zz", { desc = "Jump forward, mid-screen" })
+map("n", "<Tab>", "<Tab>" .. high, { desc = "Jump forward, shown high" })
 
--- The first jump of a search, /text or ?text and then Enter, is centered too.
--- "c" means the shortcut works while typing on the command line at the
+-- The first jump of a search, /text or ?text and then Enter, is shown high
+-- too. "c" means the shortcut works while typing on the command line at the
 -- bottom. getcmdtype() tells what is being typed there: "/" or "?" for a
--- search, ":" for a command. Only a search gets zz added after its Enter.
+-- search, ":" for a command. Only a search gets the scrolling after its Enter.
 -- expr = true means the function returns the keys to press.
 map("c", "<CR>", function()
   local kind = vim.fn.getcmdtype()
   if kind == "/" or kind == "?" then
-    return "<CR>zz"
+    return "<CR>" .. high
   end
   return "<CR>"
-end, { expr = true, desc = "Run the search and show the match mid-screen" })
+end, { expr = true, desc = "Run the search and show the match high" })
 
 -- A namespace is a label for the colors added below, so that they can be
 -- removed again without touching any other highlighting.
@@ -124,10 +135,90 @@ map("n", "<C-k>", "<C-w>k")
 -- Hold Ctrl and press l to move to the split on the right.
 map("n", "<C-l>", "<C-w>l")
 
+-- D in the file list (Space e): move to the macOS Trash, instead of deleting
+-- for good as the file list's own D does. It takes the files marked with mf
+-- if there are any, or else the lines from first to last: the cursor line,
+-- or the lines selected with V. Folders go too, with all inside.
+local function trash_in_file_list(first, last)
+  -- The tree view (i) shows the files of several folders at once, and the
+  -- name on a line doesn't say which folder it is in.
+  if vim.w.netrw_liststyle == 3 then
+    print("D doesn't work in the tree view: press i to switch the view")
+    return
+  end
+
+  -- The folder the file list shows, and where the view is, to come back to.
+  local dir = vim.b.netrw_curdir
+  local view = vim.fn.winsaveview()
+
+  -- The names of the files marked with mf in this file list. netrw#Expose
+  -- reads one of the file list's own variables; it returns "n/a", not a
+  -- list, when nothing is marked.
+  local names = vim.fn["netrw#Expose"]("netrwmarkfilelist_" .. vim.fn.bufnr())
+  local marked = type(names) == "table" and #names > 0
+  if not marked then
+    names = {}
+    -- The lines above netrw_bannercnt are the help at the top, not files.
+    for row = math.max(first, vim.w.netrw_bannercnt or 1), last do
+      vim.api.nvim_win_set_cursor(0, { row, 0 })
+      -- The file list's own function that reads the name on the cursor line.
+      local name = vim.fn["netrw#Call"]("NetrwGetWord")
+      if name ~= "./" and name ~= "../" then
+        table.insert(names, name)
+      end
+    end
+  end
+
+  -- The full paths. The file list adds a sign after some names, which is
+  -- not part of the name: / for a folder, @ for a link, * for a program.
+  local paths, shown = {}, {}
+  for _, name in ipairs(names) do
+    local path = vim.fs.joinpath(dir, (name:gsub("[/@=|*]$", "")))
+    table.insert(paths, path)
+    -- The path as shown in the question: from the project folder, or ~.
+    table.insert(shown, "  " .. vim.fn.fnamemodify(path, ":~:."))
+  end
+  vim.fn.winrestview(view)
+  if #paths == 0 then
+    return
+  end
+
+  -- Ask first, with No as the choice of Enter, like :Delete.
+  local question = "Move to the Trash?\n" .. table.concat(shown, "\n")
+  if vim.fn.confirm(question, "&Yes\n&No", 2) ~= 1 then
+    return
+  end
+
+  -- trash, which comes with macOS, takes all the paths at once.
+  local result = vim.system(vim.list_extend({ "trash" }, paths)):wait()
+  if result.code ~= 0 then
+    vim.notify(result.stderr, vim.log.levels.ERROR)
+  end
+
+  -- Close the trashed files that are open in the background: not shown in
+  -- a window and without unsaved changes. A file shown in a window stays,
+  -- so no window closes under you.
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    local name = vim.api.nvim_buf_get_name(buf)
+    if vim.tbl_contains(paths, name) and vim.fn.bufwinid(buf) == -1 and not vim.bo[buf].modified then
+      vim.api.nvim_buf_delete(buf, {})
+    end
+  end
+
+  -- Clear the marks of this file list, as mF does. (The file list's own D
+  -- uses another function, which misses the marks when the file list is the
+  -- newest buffer.) Then read the folder again and go back to the same view.
+  if marked then
+    vim.fn["netrw#Call"]("NetrwUnmarkList", vim.fn.bufnr(), dir)
+  end
+  vim.fn["netrw#Call"]("NetrwRefresh", 1, vim.fn["netrw#Call"]("NetrwBrowseChgDir", 1, "./", 0))
+  vim.fn.winrestview(view)
+end
+
 -- The file list (Space e) has shortcuts of its own, and there Ctrl-l reads
 -- the folder again, to show files made outside Neovim. The file list leaves
 -- Ctrl-l alone when another key does that, so F5 does it here, and Ctrl-l
--- moves to the split on the right in the file list too.
+-- moves to the split on the right in the file list too. D moves to the Trash.
 -- The FileType event runs when a file list opens. buffer = args.buf makes
 -- the keys work in that file list only.
 vim.api.nvim_create_autocmd("FileType", {
@@ -142,6 +233,52 @@ vim.api.nvim_create_autocmd("FileType", {
     })
     -- The file list may have taken Ctrl-l before this runs: take it back.
     map("n", "<C-l>", "<C-w>l", { buffer = args.buf })
+
+    -- D, and the Delete key (fn-Backspace), move to the Trash. See
+    -- trash_in_file_list above.
+    for _, key in ipairs({ "D", "<Del>" }) do
+      -- In Normal mode: the marked files, or the file on the cursor line.
+      map("n", key, function()
+        local row = vim.fn.line(".")
+        trash_in_file_list(row, row)
+      end, { buffer = args.buf, desc = "Move to the Trash" })
+
+      -- In Visual mode (V): the selected lines. line("v") is the line where
+      -- the selection started, line(".") the cursor's.
+      map("x", key, function()
+        local first, last = vim.fn.line("v"), vim.fn.line(".")
+        if first > last then
+          first, last = last, first
+        end
+        -- Leave Visual mode. "\27" is Esc.
+        vim.cmd("normal! \27")
+        trash_in_file_list(first, last)
+      end, { buffer = args.buf, desc = "Move the selected files to the Trash" })
+    end
+  end,
+})
+
+-- The list at the bottom that grr and :vimgrep fill ("quickfix" list) has
+-- two keys of its own. Enter keeps working as before: it jumps to the place
+-- and leaves the list open, for ]q and [q.
+-- o ("open") jumps to the place on the cursor line and closes the list.
+-- q closes the list and stays where I am.
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "qf",
+  callback = function(args)
+    map("n", "o", function()
+      -- The same window type shows a "location list", the list of one
+      -- window: its commands are :ll and :lclose instead of :cc and :cclose.
+      local is_location_list = vim.fn.win_gettype() == "loclist"
+      -- The dot is the cursor line: :.cc jumps to the place on it. The
+      -- jump moves the cursor into the file's window. :lclose closes the
+      -- list of the window it runs in, which is that window now.
+      vim.cmd(is_location_list and ".ll" or ".cc")
+      vim.cmd(is_location_list and "lclose" or "cclose")
+      -- The window has grown back to full height: show the line high.
+      require("config.center")()
+    end, { buffer = args.buf, desc = "Jump to the place and close the list" })
+    map("n", "q", "<Cmd>close<CR>", { buffer = args.buf, desc = "Close the list" })
   end,
 })
 
@@ -154,6 +291,40 @@ map("n", "<leader>yp", function()
   vim.fn.setreg("+", path)
   print("Copied: " .. path)
 end, { desc = "Copy file path" })
+
+-- Type :Delete and press Enter to move the file you are in to the macOS
+-- Trash and close it. It asks first. Finder's "Put Back" restores it.
+vim.api.nvim_create_user_command("Delete", function()
+  -- The full path of the file in this window. It is empty in a window that
+  -- shows no file, such as a new unsaved one.
+  local path = vim.api.nvim_buf_get_name(0)
+  -- filereadable is 0 for a file that was never saved, and for a folder,
+  -- such as the one the file list (Space e) shows.
+  if path == "" or vim.fn.filereadable(path) == 0 then
+    print("This window shows no file on disk")
+    return
+  end
+
+  -- confirm shows the question with the choices and returns the number of
+  -- the one picked: 1 is Yes. The last argument makes No the choice of
+  -- Enter, so a hasty Enter changes nothing. Esc returns 0, also nothing.
+  local name = vim.fn.expand("%")
+  if vim.fn.confirm("Move " .. name .. " to the Trash?", "&Yes\n&No", 2) ~= 1 then
+    return
+  end
+
+  -- trash is a command that comes with macOS. vim.system starts it
+  -- directly, without a shell, so a path with spaces is safe.
+  local result = vim.system({ "trash", path }):wait()
+  if result.code ~= 0 then
+    vim.notify(result.stderr, vim.log.levels.ERROR)
+    return
+  end
+
+  -- Close the file. ! drops its unsaved changes too: the file is gone.
+  vim.cmd("bdelete!")
+  print("Moved to the Trash: " .. name)
+end, { desc = "Move the current file to the Trash" })
 
 -- The line that pauses a program for debugging, for each file type.
 local breakpoints = {

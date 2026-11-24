@@ -41,3 +41,7 @@ require("config.markdown")
 -- Run lua/config/cedar.lua, which marks Dogwood and Cedar schema files as
 -- Cedar, so that syntax/cedar.lua colors them.
 require("config.cedar")
+
+-- Run lua/config/splitjoin.lua, which splits the items inside brackets onto
+-- lines of their own and joins them back (gS).
+require("config.splitjoin")

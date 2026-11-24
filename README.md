@@ -1,6 +1,6 @@
 # nvim-config
 
-My personal Neovim config, built up in small steps while I learn. It uses Neovim's built-in plugin manager, `vim.pack`, and only ten plugins.
+My personal Neovim config, built up in small steps while I learn. It uses Neovim's built-in plugin manager, `vim.pack`, and only eleven plugins.
 
 Tested on Neovim 0.12.6 on macOS.
 
@@ -77,6 +77,7 @@ Then start Neovim, or run `:restart` if it is open. A plugin that was added is d
 └── lua/config/
     ├── options.lua        Editor settings
     ├── keymaps.lua        Shortcuts
+    ├── center.lua         Shows the line a little above the middle after a jump
     ├── plugins.lua        fzf-lua: find files and search text
     ├── lsp.lua            Language servers: errors, go to definition, completion
     ├── colors.lua         Color scheme: VS Code light and dark, follows the terminal
@@ -85,7 +86,8 @@ Then start Neovim, or run `:restart` if it is open. A plugin that was added is d
     ├── jumps.lua          [m and ]m land on function and class names
     ├── links.lua          gf opens markdown links at their heading
     ├── markdown.lua       Markdown drawn readable in the file, and previewed in the browser
-    └── cedar.lua          .dw and .cedarschema files open as Cedar
+    ├── cedar.lua          .dw and .cedarschema files open as Cedar
+    └── splitjoin.lua      gS splits the items inside brackets onto lines and joins them back
 ```
 
 ## Shortcuts

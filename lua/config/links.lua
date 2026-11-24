@@ -78,8 +78,8 @@ local function follow_link()
     return
   end
   vim.api.nvim_win_set_cursor(0, { row, 0 })
-  -- Show the heading mid-screen, like the other jumps.
-  vim.cmd("normal! zz")
+  -- Show the heading a little above the middle, like the other jumps.
+  require("config.center")()
 end
 
 -- The FileType event runs when a markdown file opens. buffer = args.buf makes
