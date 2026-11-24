@@ -68,8 +68,8 @@ local function color_cheatsheet_keys(buf)
       -- spaces, so it has no keys.
       local keys = line:match("^(%S.-)%s%s")
       if keys then
-        -- Leave the star that marks my own shortcuts uncolored.
-        keys = keys:gsub(" %*$", "")
+        -- Leave the ★ that marks my own shortcuts uncolored.
+        keys = keys:gsub(" ★$", "")
         -- Paint the keys with the color of `code` in a sentence. Rows are
         -- counted from 0 here, which is why "row - 1" appears.
         vim.api.nvim_buf_set_extmark(buf, cheatsheet_keys, row - 1, 0, {

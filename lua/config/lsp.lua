@@ -21,6 +21,16 @@ vim.o.completeopt = "menuone,noselect,popup"
 -- TypeScript installation" next to version 7.
 vim.lsp.enable({ "basedpyright", "ruff", "tsc" })
 
+-- basedpyright checks in "recommended" mode by default, which warns about
+-- every name without a type, so plain Python without types is full of
+-- warnings. "standard" (Pyright's own default) still finds real mistakes,
+-- such as a misspelled attribute or a wrong argument, without asking for
+-- types. A project that sets its own mode in pyproject.toml or
+-- pyrightconfig.json keeps it: the project's settings win over these.
+vim.lsp.config("basedpyright", {
+  settings = { basedpyright = { analysis = { typeCheckingMode = "standard" } } },
+})
+
 -- Show error messages at the end of the line where they happen.
 vim.diagnostic.config({ virtual_text = true })
 

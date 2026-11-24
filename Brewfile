@@ -23,8 +23,11 @@ brew "tree-sitter-cli"
 # render-markdown (lua/config/markdown.lua).
 brew "utftex"
 
+# The terminal font.
+cask "font-geist-mono"
+
 # Icons only (file types, headings, checkboxes), no letters. In iTerm it is the
-# font for non-ASCII text, so the letters stay in Menlo (see the README).
+# font for non-ASCII text (see the README).
 cask "font-symbols-only-nerd-font"
 
 # Shows git diffs with colors and line numbers, in git and in the Space g preview.

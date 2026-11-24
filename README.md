@@ -15,7 +15,7 @@ brew bundle --file ~/.config/nvim/Brewfile
 
 On the first start, Neovim asks before downloading the plugins: press `y`. The syntax parsers are then built in the background, so restart Neovim once more to see the colors. The versions are pinned in `nvim-pack-lock.json`.
 
-The icons (in markdown headings, checkboxes and code blocks) come from Symbols Nerd Font, which the Brewfile installs. Tell iTerm to use it for them: Settings → Profiles → Text, tick "Use a different font for non-ASCII text" and pick "Symbols Nerd Font Mono". The letters stay in the main font. Without it the icons show as empty boxes.
+The icons (in markdown headings, checkboxes and code blocks) come from Symbols Nerd Font, which the Brewfile installs. Tell iTerm to use it for them: Settings → Profiles → Text, tick "Use a different font for non-ASCII text" and pick "Symbols Nerd Font Mono". The letters stay in the main font. Without it the icons show as empty boxes. Ghostty has these icons built in and needs nothing.
 
 For a Python project that uses uv, start Neovim with `uv run nvim .` so basedpyright can find the packages in `.venv`.
 
@@ -80,7 +80,7 @@ Then start Neovim, or run `:restart` if it is open. A plugin that was added is d
     ├── center.lua         Shows the line a little above the middle after a jump
     ├── plugins.lua        fzf-lua: find files and search text
     ├── lsp.lua            Language servers: errors, go to definition, completion
-    ├── colors.lua         Color scheme: VS Code light and dark, follows the terminal
+    ├── colors.lua         Color scheme: terafox, plus others to try
     ├── treesitter.lua     Detailed syntax highlighting with tree-sitter
     ├── diff.lua           Git changes inside the file, jumps between them
     ├── jumps.lua          [m and ]m land on function and class names

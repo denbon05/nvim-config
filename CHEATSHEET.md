@@ -2,17 +2,17 @@
 
 Keys are tapped one after another, except `Ctrl`, `Shift` and `Option`, which are held. Caps Lock is `Ctrl` when held and `Esc` when tapped, and Esc turns Caps Lock on and off (Karabiner, see the README). Everything is for Normal mode unless it says otherwise. `Space` `?` opens this file, `q` closes it.
 
-Keys marked with * are my own shortcuts from this config. The rest are built into Neovim.
+Keys marked with ★ are my own shortcuts from this config. The rest are built into Neovim.
 
-`;` and `:` are swapped in Normal and Visual mode (*): `;` starts a command, so every `:command` below is typed as `;command`. `:` (Shift-`;`) repeats the last `f` / `t` jump.
+`;` and `:` are swapped in Normal and Visual mode (★): `;` starts a command, so every `:command` below is typed as `;command`. `:` (Shift-`;`) repeats the last `f` / `t` jump.
 
 ## Open a file
 
 ```
-Space f *        Find a file by part of its name. Full screen, the list on
+Space f ★        Find a file by part of its name. Full screen, the list on
                  the left and the file on the right, like Space g
-Space Shift-f *  The same, including files git ignores (.env, docs/steps)
-Space / *        Search for text in every file of the project. What I type
+Space Shift-f ★  The same, including files git ignores (.env, docs/steps)
+Space / ★        Search for text in every file of the project. What I type
                  is a regex: . ( [ * and the like have a special meaning.
                  Full screen, long lines wrap. Inside it, Ctrl-s turns keep
                  mode on or off: while on ("Grep (kept)>"), Space / opens
@@ -23,10 +23,10 @@ Space / *        Search for text in every file of the project. What I type
 :FzfLua grep     The same for text exactly as typed, no regex: paste it at
                  "Grep For>", Enter. Typing then filters the lines found,
                  Ctrl-g switches back to the regex search
-Space b *        Pick one of the open files
-Space g *        List the files changed since the last commit, with the diff
+Space b ★        Pick one of the open files
+Space g ★        List the files changed since the last commit, with the diff
                  on the right. Opens the view I used last (Ctrl-r / s / a)
-Space e *        Show or hide the file list on the left
+Space e ★        Show or hide the file list on the left
 gf               Open the file whose path is under the cursor. On a markdown
                  link with #heading it lands on that heading. Ctrl-o goes back
 gx               Open the path or link under the cursor in its macOS app or
@@ -34,7 +34,7 @@ gx               Open the path or link under the cursor in its macOS app or
 :e path + Tab    Open a file by its path
 :e               Read the current file from disk again
 :e!              The same, and throw away my unsaved changes
-:Delete *        Move the file I am in to the Trash and close it. It asks
+:Delete ★        Move the file I am in to the Trash and close it. It asks
                  first. Finder's Put Back restores it
 ```
 
@@ -70,13 +70,13 @@ Enter    Open the file / go into the folder
          save it
 d        New folder (directory)
 R        Rename. Change the folder in the path to move the file
-D *      Move to the Trash, after y. Takes the files marked with mf, or
+D ★      Move to the Trash, after y. Takes the files marked with mf, or
          the lines selected with V, or the cursor line. A folder goes with
          all inside. Finder's Put Back restores. Not in the tree view (i)
 x        Open the file in its macOS app (Preview, Excel, Pages). For PDF,
          Word, Excel: Neovim can't show them
 gh       Show / hide the files that start with a dot (.env, .github)
-F5 *     Refresh the list: files made outside Neovim show up only then.
+F5 ★     Refresh the list: files made outside Neovim show up only then.
          Space e twice does it too, but goes back to the project folder
 I        Hide / show the help at the top
 i        Change the view: list, details, columns, tree
@@ -88,15 +88,15 @@ mf mt    Mark a file, then the folder to put it in. mc copies, mm moves
 The line numbers of added, changed and deleted lines are colored. A staged change counts as reviewed and is no longer marked.
 
 ```
-Space s *          Stage the whole file I am in. Saves it first
-Space o *          Show or hide the changes inside every open file: deleted
+Space s ★          Stage the whole file I am in. Saves it first
+Space o ★          Show or hide the changes inside every open file: deleted
                    lines appear above, added lines get a background
-Ctrl-n / Ctrl-p *  Jump to the next / previous change in the file and scroll
+Ctrl-n / Ctrl-p ★  Jump to the next / previous change in the file and scroll
                    so the whole change is visible
 gh gh              Stage the change under the cursor
-Space Shift-b *    Who changed each line of the file and when ("blame"). Full
+Space Shift-b ★    Who changed each line of the file and when ("blame"). Full
                    screen, the commit below the list. Enter jumps to the line
-:Restore *         Throw away the unstaged and unsaved changes of the file
+:Restore ★         Throw away the unstaged and unsaved changes of the file
                    I am in. The staged ones stay. It asks first
 ```
 
@@ -106,16 +106,16 @@ The lines pinned at the top of the window are the class and function the cursor 
 
 ```
 gd                  Go to the definition of the name, shown high
-Ctrl-o / Ctrl-i *   Jump back / forward through the places I jumped from,
+Ctrl-o / Ctrl-i ★   Jump back / forward through the places I jumped from,
                     shown high. A new jump after some Ctrl-o forgets the
                     places ahead, like a browser's Back
-[m / ]m *           Jump up to the name of the function or class the cursor
+[m / ]m ★           Jump up to the name of the function or class the cursor
                     is in / down to the next one (Python, JS, TS)
 grr                 List every place the name is used
 Ctrl-j, then Enter  Go down into that list and jump to the selected place
-o *                 In that list: jump to the selected place and close the
+o ★                 In that list: jump to the selected place and close the
                     list, shown high
-q *                 In that list: close it
+q ★                 In that list: close it
 ]q / [q             Jump to the next / previous place of the list without
                     entering it
 :cclose             Close the list. :copen shows it again
@@ -126,7 +126,7 @@ K K                 Enter the description window to copy from it. q closes it
 ?text + Enter       The same, searching upwards
 n / N               Jump to the next / previous match, shown high
 *                   Find the word under the cursor, shown high
-Esc *               Clear the search highlights
+Esc ★               Clear the search highlights
 %                   Jump from a bracket ( [ { to its pair and back. Not on a
                     bracket: to the next one on the line. d% deletes up to
                     the pair, v% selects it
@@ -134,7 +134,7 @@ Esc *               Clear the search highlights
 Ctrl-e / Ctrl-y     Scroll the text one line down / up. The cursor stays on
                     its line. 5 Ctrl-e scrolls five lines
 Ctrl-d / Ctrl-u     Scroll half a screen down / up
-Space j / Space k * The same, without Ctrl
+Space j / Space k ★ The same, without Ctrl
 Ctrl-f / Ctrl-b     Scroll a whole screen down / up
 gg / G              Start / end of the file
 5j / 5k             Five lines down / up. The left margin shows the number
@@ -146,9 +146,9 @@ f + character       Jump to that character on this line
 Markdown files are drawn readable: headings, bullets, checkboxes, tables and code blocks with the icon of their language, without the `**` and backticks. Math between `$` signs shows as Unicode, `$x^2$` as x². The line with the cursor, and the whole file in Insert mode, stays raw for editing.
 
 ```
-Space m *  Switch between the drawn and the raw markdown in this file.
+Space m ★  Switch between the drawn and the raw markdown in this file.
            Other files, such as this cheatsheet, stay as they are
-Space p *  Open the file in the browser, drawn like on GitHub, with images
+Space p ★  Open the file in the browser, drawn like on GitHub, with images
            and mermaid diagrams. The page follows my edits and the cursor.
            Space p again closes it
 ```
@@ -159,7 +159,7 @@ Space p *  Open the file in the browser, drawn like on GitHub, with images
 ]d / [d    Next / previous problem in the file
 Ctrl-w d   Show the full text of the problem
 gra        Offer fixes for the problem
-Space x *  Hide / show the messages at the end of the lines. The E / W
+Space x ★  Hide / show the messages at the end of the lines. The E / W
            marks and the underlines stay
 ```
 
@@ -177,11 +177,11 @@ u / Ctrl-r      Undo / redo
 grn             Rename the name everywhere
 gcc             Comment the line out, or back in
 J               Join the next line onto this one, with a space between
-gS *            Inside ( ) [ ] or { }: put each item between the commas on
+gS ★            Inside ( ) [ ] or { }: put each item between the commas on
                 a line of its own. gS again joins them back
 r + Enter       Break the line at the cursor: the character under it (the
                 space after a comma) becomes a line break
-Space d *       Add or remove a breakpoint() line (debugger; in JS and TS)
+Space d ★       Add or remove a breakpoint() line (debugger; in JS and TS)
 ```
 
 Completion in Insert mode: the menu opens by itself, `Ctrl-n` / `Ctrl-p` choose, `Ctrl-y` accepts.
@@ -211,7 +211,7 @@ The changes show in the file while I type the command; `Esc` cancels.
 English and Russian. Off until I turn it on; in code only comments and strings are checked.
 
 ```
-Space z *  Turn spell checking on or off in this window. Misspelled
+Space z ★  Turn spell checking on or off in this window. Misspelled
            words get underlined
 ]s / [s    Jump to the next / previous misspelled word
 z=         List the fixes for the word: type a number, then Enter
@@ -225,7 +225,7 @@ zug        Undo zg or zw on the word
 V / v        Select lines / characters
 y            Copy the selection
 p            Paste
-Space y p *  Copy the full path of the current file
+Space y p ★  Copy the full path of the current file
 ```
 
 Everything copied with `y` or deleted with `dd` and `x` lands in the macOS clipboard.
@@ -233,9 +233,9 @@ Everything copied with `y` or deleted with `dd` and `x` lands in the macOS clipb
 ## Windows
 
 ```
-Space v *             Split the window side by side
+Space v ★             Split the window side by side
 :split                Split the window top and bottom
-Ctrl-h / j / k / l *  Move to the window on the left / below / above / on the
+Ctrl-h / j / k / l ★  Move to the window on the left / below / above / on the
                       right
 Ctrl-w q              Close the current window. Release Ctrl before q
 Ctrl-w o              Keep only the current window
@@ -244,7 +244,7 @@ Ctrl-w o              Keep only the current window
 ## Save and quit
 
 ```
-Space w * or :w  Save
+Space w ★ or :w  Save
 :wa              Save every file
 :wqa             Save every file and quit
 :qa              Quit
