@@ -172,11 +172,27 @@ Esc             Back to Normal mode
 ciw / ci"       Replace the word / the text inside quotes
 dd / dap        Delete the line / the paragraph
 dt + character  Delete up to that character
+d/text + Enter  Delete up to that text, over several lines too. The text
+                itself stays. c/text does the same and starts typing
 .               Repeat the last change
 u / Ctrl-r      Undo / redo
 grn             Rename the name everywhere
 gcc             Comment the line out, or back in
 J               Join the next line onto this one, with a space between
+saiw" ★         Put quotes around the word ("surround add inner word").
+                ) instead of " gives (word), ( gives ( word )
+v, then sa" ★   Put quotes around the selection
+sd" ★           Delete the quotes, or ) ] }, around the cursor
+sr)] ★          Replace the ( ) around the cursor with [ ]
+sr[] / sr][ ★   Remove / add the spaces inside [ ]: [ 1 ] becomes [1] and
+                back. The same with () and )(, {} and }{
+gqq             Tidy the line as Ruff formats Python: a space after each
+                comma, none inside brackets. V, select, gq for the
+                selected lines; gg, gq, G for the whole file
+:Format ★       Tidy the whole file with the project's own tools and
+                settings: Ruff in Python (fixes too, such as unused
+                imports), ESLint and then Prettier in JS and TS. Saves
+                first; u undoes it
 gS ★            Inside ( ) [ ] or { }: put each item between the commas on
                 a line of its own. gS again joins them back
 r + Enter       Break the line at the cursor: the character under it (the
@@ -184,7 +200,19 @@ r + Enter       Break the line at the cursor: the character under it (the
 Space d ★       Add or remove a breakpoint() line (debugger; in JS and TS)
 ```
 
-Completion in Insert mode: the menu opens by itself, `Ctrl-n` / `Ctrl-p` choose, `Ctrl-y` accepts.
+Completion in Insert mode:
+
+```
+Tab ★         Open the menu, right after a letter or a dot. With the menu
+              open: the next item. Anywhere else: a normal Tab
+Shift-Tab ★   The previous item
+Enter ★       Accept the item. With nothing picked: a new line
+Ctrl-Space ★  Open the menu anywhere, also on an empty line: everything
+              that can be typed there. Typing narrows the list
+Ctrl-e        Close the menu without picking anything
+```
+
+After a dot the menu opens by itself. `Ctrl-n` / `Ctrl-p` / `Ctrl-y` still work too.
 
 ## Replace text
 

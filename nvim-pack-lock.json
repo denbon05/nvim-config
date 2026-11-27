@@ -28,6 +28,10 @@
       "rev": "f40a3f239ced93213d7dd5ef9a4aee6f5df7f83d",
       "src": "https://github.com/nvim-mini/mini.splitjoin"
     },
+    "mini.surround": {
+      "rev": "77f376bdebb3440ad13bc40b48062b29bccb7577",
+      "src": "https://github.com/nvim-mini/mini.surround"
+    },
     "modus-themes.nvim": {
       "rev": "15ffb5ab6a12f72ee1e8393fe5810d5317da2d3e",
       "src": "https://github.com/miikanissi/modus-themes.nvim"

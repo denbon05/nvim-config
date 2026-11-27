@@ -46,6 +46,19 @@ end
 -- load. The autocommand is created first, so it covers the load below too.
 vim.api.nvim_create_autocmd("ColorScheme", { callback = soften_added_lines })
 
+-- terafox paints the Visual mode selection and added lines with the same
+-- background (#293e40), so a selection on an added line can't be seen. Its
+-- search matches, changed lines and cursor line are teal too, so the
+-- selection gets a slate blue (#3d4263) that no other background uses.
+local function recolor_selection()
+  if vim.g.colors_name == "terafox" then
+    vim.api.nvim_set_hl(0, "Visual", { bg = "#3d4263" })
+  end
+end
+
+-- After every color scheme load, like the green above.
+vim.api.nvim_create_autocmd("ColorScheme", { callback = recolor_selection })
+
 -- Switch it on. terafox is dark only and stays dark in a light terminal too.
 -- It has no light version; for light mode try dayfox (same family) or shine
 -- (built into Neovim). To go back to a scheme that follows the terminal, put

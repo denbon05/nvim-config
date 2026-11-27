@@ -45,3 +45,15 @@ require("config.cedar")
 -- Run lua/config/splitjoin.lua, which splits the items inside brackets onto
 -- lines of their own and joins them back (gS).
 require("config.splitjoin")
+
+-- Run lua/config/tab.lua, which adds Tab, Shift-Tab, Enter and Ctrl-Space to
+-- the completion menu.
+require("config.tab")
+
+-- Run lua/config/surround.lua, which adds, deletes and replaces quotes and
+-- brackets around text (sa, sd, sr).
+require("config.surround")
+
+-- Run lua/config/format.lua, which adds :Format, to tidy the current file
+-- with the project's own tools (Ruff, or ESLint and Prettier).
+require("config.format")
